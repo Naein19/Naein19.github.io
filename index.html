@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naveen Tadaka | Engineer</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+        onerror="console.error('Three.js failed to load')"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+        onerror="console.error('GSAP failed to load')"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
+        onerror="console.error('ScrollTrigger failed to load')"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"
+        onerror="console.error('Lenis failed to load')"></script>
+</head>
+
+<body class="loading">
+
+    <!-- Loader -->
+    <div class="loader">
+        <div class="loader-text">
+            <span class="l-char">N</span>
+            <span class="l-char">A</span>
+            <span class="l-char">V</span>
+            <span class="l-char">E</span>
+            <span class="l-char">E</span>
+            <span class="l-char">N</span>
+        </div>
+    </div>
+
+    <!-- Canvas Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Main Content -->
+    <main data-scroll-container>
+
+        <!-- Navigation (Minimal) -->
+        <nav>
+            <div class="logo">NT.</div>
+            <div class="menu-btn">MENU</div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="char">N</span>
+                    <span class="char zoom-target">A</span>
+                    <span class="char">V</span>
+                    <span class="char">E</span>
+                    <span class="char">E</span>
+                    <span class="char">N</span>
+                </h1>
+                <h1 class="hero-title-last">
+                    <span class="char">T</span>
+                    <span class="char">A</span>
+                    <span class="char">D</span>
+                    <span class="char">A</span>
+                    <span class="char">K</span>
+                    <span class="char">A</span>
+                </h1>
+                <p class="hero-subtitle">ENGINEER</p>
+            </div>
+            <div class="scroll-indicator">
+                <span>SCROLL</span>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">ABOUT</h2>
+                <div class="about-text-wrapper">
+                    <p class="about-text">
+                        A curious builder at heart, I am a 3rd-year Computer Science student weaving together
+                        Networking, Frontend Development, and AI into real-world projects. I thrive at the crossroads of
+                        innovation and problem-solving.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects">
+            <div class="container">
+                <h2 class="section-title">PROJECTS</h2>
+                <div class="project-list">
+
+                    <div class="project-card">
+                        <div class="project-info">
+                            <span class="project-number">01</span>
+                            <h3 class="project-title">[PROJECT_1_TITLE]</h3>
+                            <p class="project-desc">[PROJECT_1_DESCRIPTION]</p>
+                        </div>
+                        <div class="project-visual"></div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-info">
+                            <span class="project-number">02</span>
+                            <h3 class="project-title">[PROJECT_2_TITLE]</h3>
+                            <p class="project-desc">[PROJECT_2_DESCRIPTION]</p>
+                        </div>
+                        <div class="project-visual"></div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-info">
+                            <span class="project-number">03</span>
+                            <h3 class="project-title">[PROJECT_3_TITLE]</h3>
+                            <p class="project-desc">[PROJECT_3_DESCRIPTION]</p>
+                        </div>
+                        <div class="project-visual"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title">CONTACT</h2>
+                <div class="contact-links">
+                    <a href="mailto:yours@gmail.com" class="contact-link">yours@gmail.com</a>
+                    <a href="#" class="contact-link">[GITHUB]</a>
+                    <a href="#" class="contact-link">[LINKEDIN]</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 NAVEEN TADAKA</p>
+        </footer>
+
+    </main>
+
+    <!-- Scripts (Defer to ensure order and non-blocking) -->
+    <script src="threeScene.js" defer></script>
+    <script src="animations.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+
+</html>
