@@ -15,6 +15,7 @@ const initLoader = () => {
                 window.initAnimations.initZoomAnimation();
                 window.initAnimations.initScrollAnimations();
                 window.initAnimations.initHorizontalSkills(); // Horizontal Scroll
+                window.initAnimations.initProjectStack(); // Project Stack
                 // Refresh ScrollTrigger to ensure positions are correct after animations
                 ScrollTrigger.refresh();
             });
@@ -55,17 +56,7 @@ const initScrollAnimations = () => {
     console.log('initScrollAnimations called');
     gsap.registerPlugin(ScrollTrigger);
 
-    // Project cards animation
-    document.querySelectorAll('.project-card').forEach((card) => {
-        gsap.from(card, {
-            scrollTrigger: {
-                trigger: card,
-                start: 'top 85%',
-                toggleActions: 'play none none reverse'
-            },
-            y: 100, opacity: 0, duration: 1, ease: 'power3.out'
-        });
-    });
+    // Contact links animation (removed individual project card animations as they are now handled by pin-stack)
 
     // Contact links animation
     gsap.from('.contact-link', {
@@ -130,12 +121,11 @@ const initZoomAnimation = () => {
         filter: 'blur(10px)'
     });
 
-    // --- SIMULTANEOUS PINNING STRATEGY ---
     // 1. Pin Hero (No spacing)
     ScrollTrigger.create({
         trigger: '#hero',
         start: 'top top',
-        end: '+=3000',
+        end: '+=1000', // Reduced from 1500
         pin: true,
         pinSpacing: false,
         invalidateOnRefresh: true,
@@ -148,35 +138,13 @@ const initZoomAnimation = () => {
         scrollTrigger: {
             trigger: aboutSection,
             start: 'top top',
-            end: '+=3000',
+            end: '+=2000', // Increased by 15% from 1500
             pin: true,
             pinSpacing: true,
             scrub: 1.2,
             invalidateOnRefresh: true,
-            onLeave: () => {
-                gsap.set(aboutSection, {
-                    position: 'relative',
-                    top: 'auto',
-                    left: 'auto',
-                    zIndex: 5,
-                    opacity: 1,
-                    scale: 1,
-                    clearProps: "transform"
-                });
-                // Ensure text elements stay visible
-                gsap.set([aboutHeading, aboutLines], {
-                    opacity: 1,
-                    filter: 'blur(0px)'
-                });
-            },
-            onEnterBack: () => {
-                gsap.set(aboutSection, {
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    zIndex: 50
-                });
-            },
+            onLeave: () => gsap.set(aboutSection, { autoAlpha: 0 }),
+            onEnterBack: () => gsap.set(aboutSection, { autoAlpha: 1 }),
             onLeaveBack: () => {
                 // Reset states when scrolling back to Hero
                 gsap.set(aboutSection, {
@@ -229,7 +197,21 @@ const initZoomAnimation = () => {
             stagger: 0.15,
             duration: 0.8,
             ease: "power3.out"
-        }, ">-0.3");
+        }, ">-0.3")
+        // Step 4: Exit Animation (Fade Up)
+        .to([aboutHeading, ...aboutLines], {
+            y: -80,
+            opacity: 0,
+            filter: 'blur(10px)',
+            duration: 1,
+            stagger: 0.1,
+            ease: "power2.in"
+        }, ">0.5")
+        // Step 5: Fade out entire section background at the very end
+        .to(aboutSection, {
+            opacity: 0,
+            duration: 0.5
+        }, ">-0.2");
 };
 
 const initHorizontalSkills = () => {
@@ -251,13 +233,12 @@ const initHorizontalSkills = () => {
             start: "top top",
             end: () => "+=" + (skillsContainer.scrollWidth - window.innerWidth),
             invalidateOnRefresh: true,
-            onUpdate: (self) => {
-                // Hide About when in Skills
-                if (self.progress > 0) {
-                    gsap.set('#about', { autoAlpha: 0 });
-                } else {
-                    gsap.set('#about', { autoAlpha: 1 });
-                }
+            onEnter: () => {
+                // Ensure About is hidden only after it has faded out in its own timeline
+                gsap.set('#about-section', { autoAlpha: 0, display: 'none' });
+            },
+            onLeaveBack: () => {
+                gsap.set('#about-section', { autoAlpha: 1, display: 'flex' });
             }
         }
     });
@@ -298,10 +279,54 @@ const initHorizontalSkills = () => {
     });
 };
 
+const initProjectStack = () => {
+    console.log('initProjectStack called');
+    const pinCards = gsap.utils.toArray(".project-card");
+
+    if (pinCards.length === 0) return;
+
+    pinCards.forEach((eachCard, index) => {
+        if (index < pinCards.length - 1) {
+            ScrollTrigger.create({
+                trigger: eachCard,
+                start: "top top",
+                endTrigger: pinCards[pinCards.length - 1],
+                end: "top top",
+                pin: true,
+                pinSpacing: false,
+                invalidateOnRefresh: true,
+                id: `pin-${index}`
+            });
+
+            ScrollTrigger.create({
+                trigger: pinCards[index + 1],
+                start: "top bottom",
+                end: "top top",
+                onUpdate: (self) => {
+                    const progress = self.progress;
+                    gsap.set(eachCard, {
+                        scale: 1 - progress * 0.25,
+                        rotation: index % 2 === 0 ? progress * 5 : - progress * 5,
+                        rotationX: index % 2 === 0 ? progress * 40 : - progress * 40,
+                    });
+
+                    const overlay = eachCard.querySelector(".overlay");
+                    if (overlay) {
+                        gsap.set(overlay, {
+                            opacity: progress * 0.4
+                        });
+                    }
+                }
+            });
+        }
+    });
+};
+
 window.initAnimations = {
     initLoader,
     initHero,
     initScrollAnimations,
     initZoomAnimation,
-    initHorizontalSkills
+    initHorizontalSkills,
+    initProjectStack
 };

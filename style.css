@@ -299,41 +299,244 @@ section {
     opacity: 0.8;
 }
 
-/* Projects */
-.project-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8rem;
+/* Projects Stack Animation Styles */
+#projects-section {
+    position: relative;
+    width: 100%;
+    background: var(--bg-color);
+    overflow: hidden;
+    padding: 0 !important;
+}
+
+.projects-main-title {
+    font-size: clamp(4rem, 15vw, 12rem);
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-color);
+    margin: 15vh 0;
+    letter-spacing: -0.05em;
+    opacity: 0.1;
+    pointer-events: none;
+    text-transform: uppercase;
 }
 
 .project-card {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 4rem;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-color);
+    overflow: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    padding: 12vh 10vw;
 }
 
-.project-number {
-    font-size: 0.8rem;
-    font-family: monospace;
+.project-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.project-content {
+    width: 100%;
+    max-width: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8vw;
+    z-index: 1;
+}
+
+.project-text-column {
+    width: 50%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+/* Typography Hierarchy */
+
+/* LEVEL 1 — CATEGORY LABEL */
+.project-category {
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    opacity: 0.5;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: block;
     color: var(--accent-color);
 }
 
-.project-title {
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 700;
-    margin: 1rem 0;
+/* LEVEL 2 — PROJECT TITLE */
+.project-content .project-title {
+    font-size: clamp(48px, 6vw, 84px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    color: var(--text-color);
 }
 
-.project-desc {
-    font-size: 1rem;
-    line-height: 1.6;
+/* LEVEL 3 — PROJECT DESCRIPTION */
+.project-content .project-description p {
+    font-size: clamp(18px, 1.4vw, 22px);
+    line-height: 1.8;
+    opacity: 0.65;
+    font-weight: 400;
+    margin-bottom: 32px;
+    max-width: 600px;
     color: var(--accent-color);
-    max-width: 400px;
 }
 
-.project-visual {
-    background: rgba(255, 255, 255, 0.03);
+/* LEVEL 4 — KEY FEATURES LIST */
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 16px;
+    margin-bottom: 32px;
+}
+
+.features-list li {
+    font-size: clamp(16px, 1vw, 18px);
+    line-height: 1.8;
+    opacity: 0.55;
+    margin-bottom: 0.6rem;
+    color: var(--accent-color);
+}
+
+.project-metadata {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* LEVEL 5 — TECH STACK LABEL */
+.metadata-label {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    margin-bottom: 8px;
+    color: var(--accent-color);
+}
+
+/* LEVEL 6 — TECH STACK CONTENT */
+.tech-stack-content {
+    font-size: 16px;
+    opacity: 0.6;
+    margin-bottom: 32px !important;
+    color: var(--accent-color);
+}
+
+/* LEVEL 7 — GITHUB LINK */
+.github-link {
+    font-size: 16px;
+    opacity: 0.8;
+    color: var(--text-color);
+    text-decoration: none;
+    position: relative;
+    align-self: flex-start;
+    transition: opacity 0.3s ease;
+}
+
+.github-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--text-color);
+    transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.github-link:hover {
+    opacity: 1;
+}
+
+.github-link:hover::after {
+    width: 100%;
+}
+
+/* IMAGE ENHANCEMENTS */
+.project-image-column {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-content .project-image {
+    width: 100%;
+    max-width: 600px;
     aspect-ratio: 16/9;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.1);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.04);
+}
+
+.project-image:hover {
+    transform: scale(1.03);
+    filter: grayscale(0%) contrast(1);
+}
+
+/* REVEAL EFFECT (CSS Scroll-Driven Animation) */
+@keyframes projectTextReveal {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal-text {
+    view-timeline-name: --project-reveal;
+    view-timeline-axis: block;
+    animation-name: projectTextReveal;
+    animation-fill-mode: both;
+    animation-timeline: --project-reveal;
+    animation-range: entry 20% cover 40%;
+}
+
+@media (max-width: 992px) {
+    .project-card {
+        padding: 8vh 5vw;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .project-content {
+        flex-direction: column;
+        justify-content: center;
+        gap: 4rem;
+        padding-top: 6rem;
+    }
+
+    .project-text-column,
+    .project-image-column {
+        width: 100%;
+        max-width: 640px;
+    }
+
+    .reveal-text {
+        animation-range: entry 10% cover 30%;
+    }
 }
 
 /* Contact */
