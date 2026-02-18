@@ -16,6 +16,8 @@ const initLoader = () => {
                 window.initAnimations.initScrollAnimations();
                 window.initAnimations.initHorizontalSkills(); // Horizontal Scroll
                 window.initAnimations.initProjectStack(); // Project Stack
+                window.initAnimations.initProjectTitleCharacterAnimation(); // Projects Title Character Float
+                window.initAnimations.initProjectContentReveal(); // Project Content Reveal
                 // Refresh ScrollTrigger to ensure positions are correct after animations
                 ScrollTrigger.refresh();
             });
@@ -46,9 +48,6 @@ const initHero = (onCompleteCallback) => {
         }, "-=0.8")
         .to('.hero-subtitle', {
             opacity: 1, y: 0, duration: 1, ease: 'power2.out', autoAlpha: 1
-        }, "-=0.5")
-        .to('.scroll-indicator', {
-            opacity: 1, y: 0, duration: 1, ease: 'power2.out', autoAlpha: 1
         }, "-=0.5");
 };
 
@@ -56,16 +55,22 @@ const initScrollAnimations = () => {
     console.log('initScrollAnimations called');
     gsap.registerPlugin(ScrollTrigger);
 
-    // Contact links animation (removed individual project card animations as they are now handled by pin-stack)
-
-    // Contact links animation
-    gsap.from('.contact-link', {
+    // Contact section reveal animation
+    const contactTl = gsap.timeline({
         scrollTrigger: {
             trigger: '#contact',
             start: 'top 70%',
-        },
-        y: 50, opacity: 0, stagger: 0.2, duration: 1, ease: 'power3.out'
+            toggleActions: 'play none none none'
+        }
     });
+
+    contactTl.from('.contact-label', { y: 20, opacity: 0, duration: 0.6, ease: 'power3.out' }, 0)
+        .from('.contact-status', { y: 20, opacity: 0, duration: 0.6, ease: 'power3.out' }, 0.1)
+        .from('.contact-heading', { y: 60, opacity: 0, duration: 1, ease: 'power3.out' }, 0.15)
+        .from('.contact-email-link', { y: 30, opacity: 0, duration: 0.7, ease: 'power3.out' }, 0.4)
+        .from('.contact-divider', { scaleX: 0, duration: 0.8, ease: 'power3.inOut', transformOrigin: 'left center' }, 0.5)
+        .from('.contact-social-link', { y: 20, opacity: 0, stagger: 0.1, duration: 0.5, ease: 'power3.out' }, 0.7)
+        .from('.contact-copyright', { opacity: 0, duration: 0.5 }, 0.9);
 };
 
 const initZoomAnimation = () => {
@@ -74,6 +79,8 @@ const initZoomAnimation = () => {
     const aboutSection = document.querySelector('#about-section');
     const aboutHeading = document.querySelector('.about-heading');
     const aboutLines = document.querySelectorAll('.about-line');
+    const aboutStats = document.querySelector('.about-stats');
+    const statNumbers = document.querySelectorAll('.stat-number');
 
     if (!target || !aboutSection) return;
 
@@ -98,6 +105,7 @@ const initZoomAnimation = () => {
     };
 
     // --- INITIAL STATES ---
+    // About section is a fixed overlay (NOT pinned separately)
     gsap.set(aboutSection, {
         opacity: 0,
         scale: 0.85,
@@ -110,10 +118,12 @@ const initZoomAnimation = () => {
         height: '100vh',
         zIndex: 50,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'stretch',
         justifyContent: 'center',
         backgroundColor: 'var(--bg-color)',
-        transformOrigin: "center center"
+        transformOrigin: "center center",
+        padding: 'clamp(4rem, 6vh, 6rem) 3rem',
+        boxSizing: 'border-box'
     });
 
     gsap.set([aboutHeading, aboutLines], {
@@ -121,42 +131,25 @@ const initZoomAnimation = () => {
         filter: 'blur(10px)'
     });
 
-    // 1. Pin Hero (No spacing)
-    ScrollTrigger.create({
-        trigger: '#hero',
-        start: 'top top',
-        end: '+=1000', // Reduced from 1500
-        pin: true,
-        pinSpacing: false,
-        invalidateOnRefresh: true,
-        onLeave: () => gsap.set('#hero', { autoAlpha: 0 }),
-        onEnterBack: () => gsap.set('#hero', { autoAlpha: 1 })
-    });
+    if (aboutStats) {
+        gsap.set(aboutStats, { opacity: 0, y: 30 });
+    }
 
-    // 2. Pin About (With spacing)
+    // Single pin on Hero drives the entire hero→about sequence.
+    // pinSpacing: true ensures the skills section sits right after the spacer — no blank gap.
     const tl = gsap.timeline({
         scrollTrigger: {
-            trigger: aboutSection,
+            trigger: '#hero',
             start: 'top top',
-            end: '+=2000', // Increased by 15% from 1500
+            end: '+=3500',
             pin: true,
             pinSpacing: true,
-            scrub: 1.2,
+            scrub: 1,
             invalidateOnRefresh: true,
-            onLeave: () => gsap.set(aboutSection, { autoAlpha: 0 }),
-            onEnterBack: () => gsap.set(aboutSection, { autoAlpha: 1 }),
-            onLeaveBack: () => {
-                // Reset states when scrolling back to Hero
-                gsap.set(aboutSection, {
-                    autoAlpha: 0,
-                    scale: 0.85
-                });
-            }
         }
     });
 
-    // --- ZOOM & POPUP ANIMATION ---
-    // Step 1: Zoom Animation (Letter 'A')
+    // --- PHASE 1: Zoom Animation (Letter 'A') ---
     tl.fromTo(target,
         { scale: 1, x: 0, y: 0, opacity: 1 },
         {
@@ -167,24 +160,29 @@ const initZoomAnimation = () => {
             duration: 1,
             ease: "power2.inOut"
         })
-        .to('.hero-title .char:not(.zoom-target), .hero-title-last, .hero-subtitle, .scroll-indicator', {
+        // Fade out the zoom target itself once it's scaled large (prevents giant white 'A' blank)
+        .to(target, {
             autoAlpha: 0,
-            duration: 0.5
+            duration: 0.3,
+        }, 0.4)
+        .to('.hero-title .char:not(.zoom-target), .hero-title-last, .hero-subtitle', {
+            autoAlpha: 0,
+            duration: 0.4
         }, 0)
         .to('#bg-canvas', {
             autoAlpha: 0,
-            duration: 0.5
+            duration: 0.4
         }, 0);
 
-    // Step 2: About Section "Popup" Animation
+    // --- PHASE 2: About Section "Popup" (starts early, overlaps with zoom) ---
     tl.to(aboutSection, {
         autoAlpha: 1,
         scale: 1,
-        duration: 0.8,
+        duration: 0.6,
         ease: "power4.out"
-    }, 0.6);
+    }, 0.35);
 
-    // Step 3: Scroll Text Reveal Animation (Scrubbed)
+    // --- PHASE 3: Text Reveal ---
     tl.to(aboutHeading, {
         opacity: 1,
         filter: 'blur(0px)',
@@ -197,19 +195,50 @@ const initZoomAnimation = () => {
             stagger: 0.15,
             duration: 0.8,
             ease: "power3.out"
-        }, ">-0.3")
-        // Step 4: Exit Animation (Fade Up)
-        .to([aboutHeading, ...aboutLines], {
-            y: -80,
-            opacity: 0,
-            filter: 'blur(10px)',
-            duration: 1,
-            stagger: 0.1,
-            ease: "power2.in"
-        }, ">0.5")
-        // Step 5: Fade out entire section background at the very end
+        }, ">-0.3");
+
+    // --- PHASE 3.5: Stats Counter Reveal ---
+    if (aboutStats) {
+        tl.to(aboutStats, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            onStart: () => {
+                // Mark section visible for CSS animations
+                aboutSection.setAttribute('data-visible', '');
+                // Animate stat numbers counting up
+                statNumbers.forEach(el => {
+                    const target = parseInt(el.textContent);
+                    const suffix = el.textContent.replace(/[0-9]/g, '');
+                    gsap.fromTo(el, { innerText: 0 }, {
+                        innerText: target,
+                        duration: 1.8,
+                        ease: "power2.out",
+                        snap: { innerText: 1 },
+                        onUpdate: function() {
+                            el.textContent = Math.round(gsap.getProperty(el, 'innerText')) + suffix;
+                        }
+                    });
+                });
+            }
+        }, ">-0.3");
+    }
+
+    // --- PHASE 4: Exit Animation (Fade Up) ---
+    const exitEls = [aboutHeading, ...aboutLines];
+    if (aboutStats) exitEls.push(aboutStats);
+    tl.to(exitEls, {
+        y: -80,
+        opacity: 0,
+        filter: 'blur(10px)',
+        duration: 0.8,
+        stagger: 0.08,
+        ease: "power2.in"
+    }, ">0.15")
+        // --- PHASE 5: Fade out about overlay ---
         .to(aboutSection, {
-            opacity: 0,
+            autoAlpha: 0,
             duration: 0.5
         }, ">-0.2");
 };
@@ -233,13 +262,6 @@ const initHorizontalSkills = () => {
             start: "top top",
             end: () => "+=" + (skillsContainer.scrollWidth - window.innerWidth),
             invalidateOnRefresh: true,
-            onEnter: () => {
-                // Ensure About is hidden only after it has faded out in its own timeline
-                gsap.set('#about-section', { autoAlpha: 0, display: 'none' });
-            },
-            onLeaveBack: () => {
-                gsap.set('#about-section', { autoAlpha: 1, display: 'flex' });
-            }
         }
     });
 
@@ -253,30 +275,7 @@ const initHorizontalSkills = () => {
         }
     });
 
-    // Animate content
-    panels.forEach((panel) => {
-        const content = panel.querySelector('.panel-content');
-        if (content) {
-            const progressBars = panel.querySelectorAll('.skill-progress');
-            progressBars.forEach((bar) => {
-                const item = bar.closest('.skill-item');
-                if (item) {
-                    const percent = item.getAttribute('data-percent');
-                    gsap.fromTo(bar, { width: '0%' }, {
-                        width: `${percent}%`,
-                        duration: 1.5,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: panel,
-                            containerAnimation: scrollTween,
-                            start: "left center",
-                            toggleActions: "play none none reverse"
-                        }
-                    });
-                }
-            });
-        }
-    });
+    // Animate content (icons don't need independent scroll animations as per request)
 };
 
 const initProjectStack = () => {
@@ -322,11 +321,125 @@ const initProjectStack = () => {
     });
 };
 
+const initProjectTitleCharacterAnimation = () => {
+    console.log('initProjectTitleCharacterAnimation called');
+    const title = document.querySelector('#project-title');
+    if (!title) return;
+
+    // Split text into characters
+    const text = title.textContent;
+    title.innerHTML = '';
+    text.split('').forEach(char => {
+        const span = document.createElement('span');
+        span.textContent = char === ' ' ? '\u00A0' : char; // Handle spaces
+        span.className = 'char';
+        title.appendChild(span);
+    });
+
+    const chars = title.querySelectorAll('.char');
+
+    gsap.fromTo(chars,
+        {
+            opacity: 0,
+            yPercent: 120,
+            scaleY: 2.3,
+            scaleX: 0.7,
+            transformOrigin: "50% 0%"
+        },
+        {
+            opacity: 1,
+            yPercent: 0,
+            scaleY: 1,
+            scaleX: 1,
+            duration: 1,
+            ease: "back.inOut(2)",
+            stagger: 0.03,
+            scrollTrigger: {
+                trigger: "#project-title",
+                start: "center bottom+=50%",
+                end: "bottom bottom-=40%",
+                scrub: true,
+                invalidateOnRefresh: true,
+                id: "project-title-anim"
+            }
+        }
+    );
+};
+
+const initProjectContentReveal = () => {
+    console.log('initProjectContentReveal called');
+    const cards = gsap.utils.toArray('.project-card');
+    if (cards.length === 0) return;
+
+    cards.forEach((card, index) => {
+        const category = card.querySelector('.project-category');
+        const revealEls = card.querySelectorAll('.reveal-el');
+        const mockup = card.querySelector('.project-mockup');
+        const numberBg = card.querySelector('.project-number-bg');
+        const codeLines = card.querySelectorAll('.code-line');
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 75%',
+                toggleActions: 'play none none none'
+            }
+        });
+
+        // Watermark number scale in
+        if (numberBg) {
+            tl.fromTo(numberBg,
+                { autoAlpha: 0, scale: 0.85 },
+                { autoAlpha: 1, scale: 1, duration: 1.4, ease: 'power2.out' },
+                0
+            );
+        }
+
+        // Category label slide in
+        if (category) {
+            tl.fromTo(category,
+                { autoAlpha: 0, x: -30 },
+                { autoAlpha: 1, x: 0, duration: 0.7, ease: 'power3.out' },
+                0.1
+            );
+        }
+
+        // Text elements stagger reveal
+        if (revealEls.length > 0) {
+            tl.fromTo(revealEls,
+                { autoAlpha: 0, y: 35 },
+                { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out' },
+                0.2
+            );
+        }
+
+        // Mockup slide in with subtle 3D
+        if (mockup) {
+            tl.fromTo(mockup,
+                { autoAlpha: 0, x: 80, rotationY: -8 },
+                { autoAlpha: 1, x: 0, rotationY: 0, duration: 1, ease: 'power3.out' },
+                0.25
+            );
+        }
+
+        // Code lines typewriter stagger
+        if (codeLines.length > 0) {
+            tl.fromTo(codeLines,
+                { autoAlpha: 0, x: 10 },
+                { autoAlpha: 1, x: 0, duration: 0.3, stagger: 0.04, ease: 'power2.out' },
+                0.6
+            );
+        }
+    });
+};
+
 window.initAnimations = {
     initLoader,
     initHero,
     initScrollAnimations,
     initZoomAnimation,
     initHorizontalSkills,
-    initProjectStack
+    initProjectStack,
+    initProjectTitleCharacterAnimation,
+    initProjectContentReveal
 };
