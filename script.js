@@ -1,8 +1,7 @@
 console.log('Script.js loaded');
 
-// --- CUSTOM CURSOR (desktop only) ---
+// --- CUSTOM CURSOR (desktop only — clean redesign) ---
 (function initCustomCursor() {
-    // Skip on touch devices
     if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
 
     const dot = document.getElementById('cursor-dot');
@@ -10,28 +9,34 @@ console.log('Script.js loaded');
     if (!dot || !ring) return;
 
     let mouseX = 0, mouseY = 0;
+    let dotX = 0, dotY = 0;
     let ringX = 0, ringY = 0;
     let isVisible = false;
 
-    // Smooth follow with lerp
     function lerp(a, b, t) { return a + (b - a) * t; }
 
-    function animateCursor() {
-        ringX = lerp(ringX, mouseX, 0.15);
-        ringY = lerp(ringY, mouseY, 0.15);
-        dot.style.left = mouseX + 'px';
-        dot.style.top = mouseY + 'px';
+    function animate() {
+        dotX = lerp(dotX, mouseX, 0.2);
+        dotY = lerp(dotY, mouseY, 0.2);
+        ringX = lerp(ringX, mouseX, 0.08);
+        ringY = lerp(ringY, mouseY, 0.08);
+
+        dot.style.left = dotX + 'px';
+        dot.style.top = dotY + 'px';
         ring.style.left = ringX + 'px';
         ring.style.top = ringY + 'px';
-        requestAnimationFrame(animateCursor);
+
+        requestAnimationFrame(animate);
     }
-    animateCursor();
+    animate();
 
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         if (!isVisible) {
             isVisible = true;
+            dotX = mouseX; dotY = mouseY;
+            ringX = mouseX; ringY = mouseY;
             dot.classList.add('visible');
             ring.classList.add('visible');
         }
@@ -49,47 +54,31 @@ console.log('Script.js loaded');
         ring.classList.add('visible');
     });
 
-    // Click animation
-    document.addEventListener('mousedown', () => ring.classList.add('clicking'));
-    document.addEventListener('mouseup', () => ring.classList.remove('clicking'));
+    // Click pulse
+    document.addEventListener('mousedown', () => {
+        dot.classList.add('clicking');
+        ring.classList.add('clicking');
+    });
+    document.addEventListener('mouseup', () => {
+        dot.classList.remove('clicking');
+        ring.classList.remove('clicking');
+    });
 
-    // Hover states for interactive elements
-    const interactiveSelectors = 'a, button, .skill-icon-container, .social-icon, .env-tool-container, .nav-link, .mobile-link, .logo, .menu-btn, .github-link, .contact-social-link, .contact-email-link';
-
-    // Text selectors for text cursor
-    const textSelectors = '.about-text, .project-description p, .features-list li, .tech-stack-content, .env-tool-quote, .hero-subtitle, .contact-copyright, .status-text';
+    // Interactive hover — ring expands
+    const interactiveSelectors = 'a, button, .skill-icon-container, .social-icon, .env-tool-container, .nav-link, .mobile-link, .logo, .menu-btn, .github-link, .contact-social-link, .contact-email-link, .status-badge, .exp-tag';
 
     document.querySelectorAll(interactiveSelectors).forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            ring.classList.add('hovering');
-            dot.classList.add('hidden');
-        });
-        el.addEventListener('mouseleave', () => {
-            ring.classList.remove('hovering');
-            dot.classList.remove('hidden');
-        });
+        el.addEventListener('mouseenter', () => ring.classList.add('hovering'));
+        el.addEventListener('mouseleave', () => ring.classList.remove('hovering'));
     });
 
-    document.querySelectorAll(textSelectors).forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            ring.classList.add('text-hover');
-            dot.classList.add('hidden');
-        });
-        el.addEventListener('mouseleave', () => {
-            ring.classList.remove('text-hover');
-            dot.classList.remove('hidden');
-        });
-    });
-
-    // Magnetic pull effect on social icons and nav links
+    // Magnetic pull on key elements
     const magneticEls = document.querySelectorAll('.social-icon, .nav-link');
     magneticEls.forEach(el => {
         el.addEventListener('mousemove', (e) => {
             const rect = el.getBoundingClientRect();
-            const cx = rect.left + rect.width / 2;
-            const cy = rect.top + rect.height / 2;
-            const dx = (e.clientX - cx) * 0.25;
-            const dy = (e.clientY - cy) * 0.25;
+            const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.2;
+            const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.2;
             if (typeof gsap !== 'undefined') {
                 gsap.to(el, { x: dx, y: dy, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
             }
@@ -126,13 +115,14 @@ window.addEventListener('load', () => {
                     lenis.raf(time * 1000);
                 });
                 gsap.ticker.lagSmoothing(0);
+            } else {
+                // Fallback: drive Lenis via standalone RAF when ScrollTrigger unavailable
+                function lenisRaf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(lenisRaf);
+                }
+                requestAnimationFrame(lenisRaf);
             }
-
-            function raf(time) {
-                lenis.raf(time);
-                requestAnimationFrame(raf);
-            }
-            requestAnimationFrame(raf);
         }
     } catch (e) {
         console.error('Lenis Error:', e);
@@ -208,9 +198,13 @@ window.addEventListener('load', () => {
     try {
         if (typeof gsap !== 'undefined') {
             // Ensure initial states for Hero
-            gsap.set('.hero-title .char', { y: 100, autoAlpha: 0 }); // Hide initially
-            gsap.set('.hero-title-last .char', { y: 100, autoAlpha: 0 });
-            gsap.set('.hero-subtitle', { y: 20, autoAlpha: 0 });
+            gsap.set('.hero-title .char', { y: 100, autoAlpha: 0, rotation: 8, filter: 'blur(10px)' });
+            gsap.set('.hero-title-last .char', { y: 100, autoAlpha: 0, rotation: -5, filter: 'blur(10px)' });
+            gsap.set('.hero-subtitle', { y: 30, autoAlpha: 0 });
+            gsap.set('.hero-role-badge', { y: -20, autoAlpha: 0 });
+            gsap.set('.hero-expertise', { autoAlpha: 1 });
+            gsap.set('.exp-tag', { y: 20, autoAlpha: 0 });
+            gsap.set('.hero-line', { scaleX: 0 });
 
             if (window.initAnimations) {
                 // initLoader will chain: initHero -> initZoomAnimation -> initScrollAnimations
@@ -271,15 +265,19 @@ window.addEventListener('load', () => {
                     },
                 });
 
-                // Hide social bar when in contact section
+                // Hide social bar when in contact section (status badge stays visible always)
                 const socialBar = document.querySelector('.hero-social-bar');
                 if (socialBar) {
                     ScrollTrigger.create({
                         trigger: '#contact',
                         start: 'top 50%',
                         end: 'bottom top',
-                        onEnter: () => socialBar.classList.add('hide'),
-                        onLeaveBack: () => socialBar.classList.remove('hide'),
+                        onEnter: () => {
+                            socialBar.classList.add('hide');
+                        },
+                        onLeaveBack: () => {
+                            socialBar.classList.remove('hide');
+                        },
                     });
                 }
             } else {
@@ -319,7 +317,9 @@ window.addEventListener('load', () => {
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             mobileMenu.classList.toggle('active');
-            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            const isOpen = mobileMenu.classList.contains('active');
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+            menuToggle.setAttribute('aria-expanded', String(isOpen));
         });
 
         mobileMenu.querySelectorAll('.mobile-link').forEach(link => {
@@ -331,4 +331,42 @@ window.addEventListener('load', () => {
             });
         });
     }
+
+    // --- STATUS BADGE TYPEWRITER ---
+    (function initStatusTypewriter() {
+        const statusTexts = ['Vitian', 'Athlete', 'Programmer', 'Engineer', 'Creator'];
+        let statusIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const statusEl = document.getElementById('status-badge-text');
+
+        if (!statusEl) return;
+
+        function typeStatus() {
+            const current = statusTexts[statusIndex];
+
+            if (isDeleting) {
+                charIndex--;
+                statusEl.textContent = current.substring(0, charIndex);
+            } else {
+                charIndex++;
+                statusEl.textContent = current.substring(0, charIndex);
+            }
+
+            let delay = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === current.length) {
+                delay = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                statusIndex = (statusIndex + 1) % statusTexts.length;
+                delay = 500;
+            }
+
+            setTimeout(typeStatus, delay);
+        }
+
+        typeStatus();
+    })();
 });

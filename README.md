@@ -8,7 +8,7 @@
 
 <br/><br/>
 
-[![Portfolio](https://img.shields.io/badge/◆_LIVE_PORTFOLIO-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://naveentadaka.dev)
+[![Portfolio](https://img.shields.io/badge/◆_LIVE_PORTFOLIO-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://naein.github.io)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A0A0A?style=for-the-badge&logo=linkedin&logoColor=0077B5)](https://linkedin.com/in/naveentadaka)
 [![GitHub](https://img.shields.io/badge/GitHub-0A0A0A?style=for-the-badge&logo=github&logoColor=white)](https://github.com/naveentadaka)
 
@@ -36,19 +36,19 @@ This isn't a template. Every pixel, every transition, every micro-interaction wa
 │   ● HERO              Kinetic typography + Three.js particle field  │
 │   │                   Magnetic cursor · Film grain overlay          │
 │   ▼                                                                 │
-│   ● ZOOM-THROUGH      Letter "A" fractal zoom → About reveal       │
+│   ● ZOOM-THROUGH      Letter "A" fractal zoom → About reveal        │
 │   │                   300x scale · Seamless phase transition        │
 │   ▼                                                                 │
 │   ● ABOUT             Fixed overlay with blur-in text cascade       │
 │   │                   Animated stat counters · Gradient emphasis    │
 │   ▼                                                                 │
-│   ● SKILLS            Horizontal scroll · 3 categorized panels     │
+│   ● SKILLS            Horizontal scroll · 3 categorized panels      │
 │   │                   Icon grid · Pinned section architecture       │
 │   ▼                                                                 │
-│   ● PROJECTS          Pin-stack cards · Code mockup previews       │
+│   ● PROJECTS          Pin-stack cards · Code mockup previews        │
 │   │                   Scale + rotation on scroll · Edge glow        │
 │   ▼                                                                 │
-│   ● CONTACT           Gradient text · Social link animations       │
+│   ● CONTACT           Gradient text · Social link animations        │
 │                       Italic glow · Arrow hover transitions         │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
@@ -214,9 +214,8 @@ Vignette · Magnetic hover
 
 <div align="center">
 
-| <img src="https://raw.githubusercontent.com/nicedoc/browser-logos/master/src/chrome/chrome_48x48.png" width="24"/> | <img src="https://raw.githubusercontent.com/nicedoc/browser-logos/master/src/firefox/firefox_48x48.png" width="24"/> | <img src="https://raw.githubusercontent.com/nicedoc/browser-logos/master/src/safari/safari_48x48.png" width="24"/> | <img src="https://raw.githubusercontent.com/nicedoc/browser-logos/master/src/edge/edge_48x48.png" width="24"/> |
+| ![Chrome](https://img.shields.io/badge/Chrome_90+-0A0A0A?style=for-the-badge&logo=googlechrome&logoColor=4285F4) | ![Firefox](https://img.shields.io/badge/Firefox_90+-0A0A0A?style=for-the-badge&logo=firefoxbrowser&logoColor=FF7139) | ![Safari](https://img.shields.io/badge/Safari_15+-0A0A0A?style=for-the-badge&logo=safari&logoColor=006CFF) | ![Edge](https://img.shields.io/badge/Edge_90+-0A0A0A?style=for-the-badge&logo=microsoftedge&logoColor=0078D7) |
 |:---:|:---:|:---:|:---:|
-| Chrome 90+ | Firefox 90+ | Safari 15+ | Edge 90+ |
 
 </div>
 

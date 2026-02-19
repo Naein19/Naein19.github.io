@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Naveen Tadaka | Engineer</title>
+    <meta name="description" content="Portfolio of Naveen Tadaka — Full Stack Developer & AI Engineer. Building digital experiences with code, AI, and automation.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,8 +17,6 @@
     <link rel="stylesheet" href="style.css">
 
     <!-- CDNs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
-        onerror="console.error('Three.js failed to load')"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
         onerror="console.error('GSAP failed to load')"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
@@ -28,16 +27,19 @@
 
 <body class="loading">
 
+    <!-- Skip Navigation -->
+    <a href="#main-content" class="skip-nav">Skip to content</a>
+
     <!-- Custom Cursor -->
-    <div class="cursor-dot" id="cursor-dot"></div>
-    <div class="cursor-ring" id="cursor-ring"></div>
+    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
 
     <!-- Film Grain Overlay -->
-    <div class="film-grain"></div>
-    <div class="vignette-overlay"></div>
+    <div class="film-grain" aria-hidden="true"></div>
+    <div class="vignette-overlay" aria-hidden="true"></div>
 
     <!-- Loader -->
-    <div class="loader">
+    <div class="loader" aria-hidden="true">
         <div class="loader-text">
             <span class="l-char">N</span>
             <span class="l-char">A</span>
@@ -49,10 +51,10 @@
     </div>
 
     <!-- Canvas Background -->
-    <canvas id="bg-canvas"></canvas>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <!-- Main Content -->
-    <main data-scroll-container>
+    <main data-scroll-container id="main-content" role="main">
 
         <!-- Navigation -->
         <nav>
@@ -64,14 +66,14 @@
                 <a href="#projects-section" class="nav-link">PROJECTS</a>
                 <a href="#contact" class="nav-link">CONTACT</a>
             </div>
-            <button class="menu-btn" id="menu-toggle" aria-label="Toggle menu">
+            <button class="menu-btn" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
                 <span class="menu-line"></span>
                 <span class="menu-line"></span>
             </button>
         </nav>
 
         <!-- Mobile Menu Overlay -->
-        <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Navigation menu">
             <div class="mobile-menu-inner">
                 <a href="#hero" class="mobile-link">HOME</a>
                 <a href="#about-section" class="mobile-link">ABOUT</a>
@@ -98,7 +100,16 @@
 
         <!-- Hero Section -->
         <section id="hero">
+            <!-- Ambient Glow -->
+            <div class="hero-glow-orb"></div>
+
             <div class="hero-content">
+                <!-- Professional Role Badge -->
+                <div class="hero-role-badge">
+                    <span class="role-dot"></span>
+                    <span class="role-text">FULL STACK DEVELOPER & AI ENGINEER</span>
+                </div>
+
                 <h1 class="hero-title">
                     <span class="char">N</span>
                     <span class="char zoom-target">A</span>
@@ -115,12 +126,27 @@
                     <span class="char">K</span>
                     <span class="char">A</span>
                 </h1>
-                <p class="hero-subtitle">FullStack Developer || GEN AI || n8n || ENGINEER</p>
+                <div class="hero-line" aria-hidden="true"></div>
+                <p class="hero-subtitle">Crafting Digital Experiences · Code · AI · Automation</p>
+
+                <!-- Expertise Tags -->
+                <div class="hero-expertise">
+                    <span class="exp-tag">GenAI</span>
+                    <span class="exp-tag">Full Stack</span>
+                    <span class="exp-tag">Automation</span>
+                    <span class="exp-tag">Three.js</span>
+                    <span class="exp-tag">Cloud</span>
+                </div>
             </div>
+
         </section>
 
         <!-- About Section -->
         <section id="about-section">
+            <!-- Floating Accent Elements -->
+            <div class="floating-accent accent-1"></div>
+            <div class="floating-accent accent-2"></div>
+            <div class="floating-accent accent-3"></div>
             <div class="container">
                 <h2 class="section-title about-heading">ABOUT</h2>
                 <div class="about-text-wrapper">
@@ -494,49 +520,56 @@
 
         <!-- Projects Section -->
         <section id="projects-section">
-            <h2 class="projects-main-title scroll-float-title" id="project-title">PROJECTS</h2>
+            <!-- Projects Intro -->
+            <div class="projects-intro" id="projects-intro">
+                <div class="projects-bg-text" aria-hidden="true">PROJECTS</div>
+                <h2 class="projects-main-title scroll-float-title" id="project-title">Projects</h2>
+            </div>
 
-            <!-- Project 1: NeuralDocs -->
+            <!-- Project 1: Jiva Smart Assistant -->
             <div class="project-card">
                 <div class="overlay"></div>
+                <div class="project-accent-orb"></div>
+                <div class="project-accent-line"></div>
                 <div class="project-number-bg">01</div>
                 <div class="project-content">
                     <div class="project-text-column">
-                        <span class="project-category">FULL STACK · AI</span>
-                        <h3 class="project-title reveal-el">NeuralDocs</h3>
+                        <span class="project-category">AI · VOICE ASSISTANT · AUTOMATION</span>
+                        <h3 class="project-title reveal-el">Jiva Smart Assistant</h3>
                         <div class="project-description reveal-el">
-                            <p>An intelligent document analysis platform that uses LLMs to parse, understand, and answer questions about uploaded documents in real-time with source citations.</p>
+                            <p>An AI-powered voice assistant built with Google Gemini and LiveKit that automates real-world tasks — from sending emails and WhatsApp messages to controlling apps and reading screens.</p>
                         </div>
                         <ul class="features-list reveal-el">
-                            <li>→ Multi-format document parsing (PDF, DOCX, TXT)</li>
-                            <li>→ Context-aware Q&amp;A with source highlighting</li>
-                            <li>→ Vector embeddings for semantic search</li>
-                            <li>→ Real-time collaborative annotations</li>
+                            <li>→ Real-time voice interaction via LiveKit WebRTC</li>
+                            <li>→ Multi-tool agent: email, WhatsApp, app control</li>
+                            <li>→ Gemini AI for natural language understanding</li>
+                            <li>→ Screen reading &amp; Gradio web interface</li>
                         </ul>
                         <div class="project-metadata reveal-el">
                             <span class="metadata-label">STACK</span>
-                            <p class="tech-stack-content">Python · FastAPI · LangChain · Supabase · React</p>
+                            <p class="tech-stack-content">Python · Gemini AI · LiveKit · Gradio · dotenv</p>
                         </div>
-                        <a href="https://github.com/Naein19" target="_blank" class="github-link reveal-el">View on GitHub ↗</a>
+                        <a href="https://github.com/Naein19/Jiva_Smart_Assistant" target="_blank" class="github-link reveal-el">View on GitHub ↗</a>
                     </div>
                     <div class="project-image-column">
                         <div class="project-mockup">
                             <div class="mockup-header">
                                 <div class="mockup-dots"><span></span><span></span><span></span></div>
-                                <span class="mockup-url">neuraldocs.app</span>
+                                <span class="mockup-url">jiva_assistant.py</span>
                             </div>
                             <div class="mockup-body">
                                 <div class="mockup-code">
-                                    <span class="code-line"><span class="code-keyword">from</span> langchain <span class="code-keyword">import</span> <span class="code-func">RetrievalQA</span></span>
-                                    <span class="code-line"></span>
-                                    <span class="code-line"><span class="code-keyword">class</span> <span class="code-func">DocAnalyzer</span>:</span>
-                                    <span class="code-line">    <span class="code-keyword">def</span> <span class="code-func">query</span>(self, text):</span>
-                                    <span class="code-line">        emb = self.<span class="code-func">vectorize</span>(text)</span>
-                                    <span class="code-line">        ctx = self.db.<span class="code-func">search</span>(emb)</span>
-                                    <span class="code-line">        <span class="code-keyword">return</span> self.llm.<span class="code-func">generate</span>(</span>
-                                    <span class="code-line">            prompt=text,</span>
-                                    <span class="code-line">            context=ctx</span>
+                                    <span class="code-line"><span class="code-keyword">class</span> <span class="code-func">Assistant</span>:</span>
+                                    <span class="code-line">    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(self):</span>
+                                    <span class="code-line">        self.model = <span class="code-func">genai</span>.GenerativeModel(</span>
+                                    <span class="code-line">            model=<span class="code-string">"gemini-2.0-flash"</span></span>
                                     <span class="code-line">        )</span>
+                                    <span class="code-line">        self.tools = [</span>
+                                    <span class="code-line">            <span class="code-func">send_email</span>,</span>
+                                    <span class="code-line">            <span class="code-func">send_whatsapp</span>,</span>
+                                    <span class="code-line">            <span class="code-func">control_app</span>,</span>
+                                    <span class="code-line">            <span class="code-func">read_screen</span></span>
+                                    <span class="code-line">        ]</span>
                                 </div>
                             </div>
                         </div>
@@ -544,47 +577,51 @@
                 </div>
             </div>
 
-            <!-- Project 2: FlowForge -->
+            <!-- Project 2: VetFlow Pro -->
             <div class="project-card">
                 <div class="overlay"></div>
+                <div class="project-accent-orb"></div>
+                <div class="project-accent-line"></div>
                 <div class="project-number-bg">02</div>
                 <div class="project-content">
                     <div class="project-text-column">
-                        <span class="project-category">AUTOMATION · WORKFLOW</span>
-                        <h3 class="project-title reveal-el">FlowForge</h3>
+                        <span class="project-category">FULL STACK · HEALTHCARE · SAAS</span>
+                        <h3 class="project-title reveal-el">VetFlow Pro</h3>
                         <div class="project-description reveal-el">
-                            <p>A custom n8n-powered automation dashboard that orchestrates complex multi-step workflows with visual monitoring, error recovery, and intelligent retry mechanisms.</p>
+                            <p>A comprehensive veterinary clinic management system with role-based dashboards, invoicing, and real-time analytics — built for Admin, Doctor, Receptionist &amp; Accountant workflows.</p>
                         </div>
                         <ul class="features-list reveal-el">
-                            <li>→ Drag-and-drop workflow designer</li>
-                            <li>→ 40+ custom integration nodes</li>
-                            <li>→ Real-time execution dashboard</li>
-                            <li>→ Smart error recovery &amp; retry logic</li>
+                            <li>→ Role-based access: 4 distinct dashboards</li>
+                            <li>→ Revenue analytics with Recharts visualization</li>
+                            <li>→ Full invoicing &amp; billing system</li>
+                            <li>→ Supabase 13-table schema with Row Level Security</li>
                         </ul>
                         <div class="project-metadata reveal-el">
                             <span class="metadata-label">STACK</span>
-                            <p class="tech-stack-content">n8n · Node.js · PostgreSQL · TailwindCSS · Docker</p>
+                            <p class="tech-stack-content">Next.js · TypeScript · Supabase · shadcn/ui · Recharts</p>
                         </div>
-                        <a href="https://github.com/Naein19" target="_blank" class="github-link reveal-el">View on GitHub ↗</a>
+                        <a href="https://github.com/Naein19/vet-flow-pro-prototype" target="_blank" class="github-link reveal-el">View on GitHub ↗</a>
                     </div>
                     <div class="project-image-column">
                         <div class="project-mockup">
                             <div class="mockup-header">
                                 <div class="mockup-dots"><span></span><span></span><span></span></div>
-                                <span class="mockup-url">flowforge.dev</span>
+                                <span class="mockup-url">vetflow-pro/dashboard</span>
                             </div>
                             <div class="mockup-body">
                                 <div class="mockup-code">
-                                    <span class="code-line"><span class="code-keyword">const</span> workflow = <span class="code-keyword">new</span> <span class="code-func">Pipeline</span>({</span>
-                                    <span class="code-line">  name: <span class="code-string">"data-sync"</span>,</span>
-                                    <span class="code-line">  trigger: <span class="code-func">cron</span>(<span class="code-string">"*/15 * * * *"</span>),</span>
-                                    <span class="code-line">  nodes: [</span>
-                                    <span class="code-line">    <span class="code-func">fetchAPI</span>(<span class="code-string">"users"</span>),</span>
-                                    <span class="code-line">    <span class="code-func">transform</span>({ map: <span class="code-string">"norm"</span> }),</span>
-                                    <span class="code-line">    <span class="code-func">loadDB</span>({ upsert: <span class="code-keyword">true</span> })</span>
-                                    <span class="code-line">  ],</span>
-                                    <span class="code-line">  retry: { max: <span class="code-num">3</span>, delay: <span class="code-num">5000</span> }</span>
-                                    <span class="code-line">});</span>
+                                    <span class="code-line"><span class="code-keyword">const</span> revenue = invoices</span>
+                                    <span class="code-line">  .<span class="code-func">filter</span>(i => i.status === <span class="code-string">"paid"</span>)</span>
+                                    <span class="code-line">  .<span class="code-func">reduce</span>((sum, i) => sum + i.total, <span class="code-num">0</span>);</span>
+                                    <span class="code-line"></span>
+                                    <span class="code-line"><span class="code-keyword">const</span> stats = {</span>
+                                    <span class="code-line">  patients: <span class="code-func">getActiveCount</span>(),</span>
+                                    <span class="code-line">  appointments: <span class="code-func">getTodaySlots</span>(),</span>
+                                    <span class="code-line">  revenue: <span class="code-func">formatCurrency</span>(revenue),</span>
+                                    <span class="code-line">  pending: invoices.<span class="code-func">filter</span>(</span>
+                                    <span class="code-line">    i => i.status === <span class="code-string">"pending"</span></span>
+                                    <span class="code-line">  ).length</span>
+                                    <span class="code-line">};</span>
                                 </div>
                             </div>
                         </div>
@@ -592,96 +629,102 @@
                 </div>
             </div>
 
-            <!-- Project 3: DevPulse -->
+            <!-- Project 3: MyShell -->
             <div class="project-card">
                 <div class="overlay"></div>
+                <div class="project-accent-orb"></div>
+                <div class="project-accent-line"></div>
                 <div class="project-number-bg">03</div>
                 <div class="project-content">
                     <div class="project-text-column">
-                        <span class="project-category">FULL STACK · ANALYTICS</span>
-                        <h3 class="project-title reveal-el">DevPulse</h3>
+                        <span class="project-category">SYSTEMS PROGRAMMING · CLI · JAVA</span>
+                        <h3 class="project-title reveal-el">MyShell</h3>
                         <div class="project-description reveal-el">
-                            <p>A real-time developer analytics platform that tracks coding patterns, productivity metrics, and generates AI-powered insights to optimize development workflows.</p>
+                            <p>A custom Unix shell interpreter written in pure Java — featuring a state-machine parser, built-in commands, and external process execution via ProcessBuilder.</p>
                         </div>
                         <ul class="features-list reveal-el">
-                            <li>→ Real-time WebSocket data streaming</li>
-                            <li>→ AI-generated productivity insights</li>
-                            <li>→ Custom dashboard with drag widgets</li>
-                            <li>→ Team collaboration &amp; benchmarking</li>
+                            <li>→ State-machine tokenizer &amp; parser</li>
+                            <li>→ Built-ins: echo, pwd, cd, type, exit</li>
+                            <li>→ External command execution via ProcessBuilder</li>
+                            <li>→ Clean ICommand architecture pattern</li>
                         </ul>
                         <div class="project-metadata reveal-el">
                             <span class="metadata-label">STACK</span>
-                            <p class="tech-stack-content">Java · Spring Boot · MongoDB · React · WebSocket</p>
+                            <p class="tech-stack-content">Java · ProcessBuilder · State Machine · CLI</p>
                         </div>
-                        <a href="https://github.com/Naein19" target="_blank" class="github-link reveal-el">View on GitHub ↗</a>
-                    </div>
-                    <div class="project-image-column">
-                        <div class="project-mockup">
-                            <div class="mockup-header">
-                                <div class="mockup-dots"><span></span><span></span><span></span></div>
-                                <span class="mockup-url">devpulse.io</span>
-                            </div>
-                            <div class="mockup-body">
-                                <div class="mockup-code">
-                                    <span class="code-line"><span class="code-keyword">@RestController</span></span>
-                                    <span class="code-line"><span class="code-keyword">public class</span> <span class="code-func">MetricsAPI</span> {</span>
-                                    <span class="code-line"></span>
-                                    <span class="code-line">  <span class="code-keyword">@GetMapping</span>(<span class="code-string">"/pulse"</span>)</span>
-                                    <span class="code-line">  <span class="code-keyword">public</span> Flux&lt;Metric&gt; <span class="code-func">stream</span>() {</span>
-                                    <span class="code-line">    <span class="code-keyword">return</span> metricsService</span>
-                                    <span class="code-line">      .<span class="code-func">getLiveStream</span>()</span>
-                                    <span class="code-line">      .<span class="code-func">filter</span>(Metric::isActive)</span>
-                                    <span class="code-line">      .<span class="code-func">map</span>(this::enrich);</span>
-                                    <span class="code-line">  }</span>
-                                    <span class="code-line">}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Project 4: NetScan Pro -->
-            <div class="project-card">
-                <div class="overlay"></div>
-                <div class="project-number-bg">04</div>
-                <div class="project-content">
-                    <div class="project-text-column">
-                        <span class="project-category">SECURITY · NETWORKING</span>
-                        <h3 class="project-title reveal-el">NetScan Pro</h3>
-                        <div class="project-description reveal-el">
-                            <p>An advanced network reconnaissance and vulnerability scanner that automates security auditing with intelligent port scanning, service detection, and threat assessment.</p>
-                        </div>
-                        <ul class="features-list reveal-el">
-                            <li>→ Multi-threaded async port scanning</li>
-                            <li>→ Service fingerprinting &amp; OS detection</li>
-                            <li>→ CVE database cross-referencing</li>
-                            <li>→ Automated PDF report generation</li>
-                        </ul>
-                        <div class="project-metadata reveal-el">
-                            <span class="metadata-label">STACK</span>
-                            <p class="tech-stack-content">Python · C · Bash · PostgreSQL · Scapy</p>
-                        </div>
-                        <a href="https://github.com/Naein19" target="_blank" class="github-link reveal-el">View on GitHub ↗</a>
+                        <a href="https://github.com/Naein19/MyShell" target="_blank" class="github-link reveal-el">View on GitHub ↗</a>
                     </div>
                     <div class="project-image-column">
                         <div class="project-mockup mockup-terminal">
                             <div class="mockup-header">
                                 <div class="mockup-dots"><span></span><span></span><span></span></div>
-                                <span class="mockup-url">~/netscan-pro</span>
+                                <span class="mockup-url">~/MyShell</span>
                             </div>
                             <div class="mockup-body">
                                 <div class="mockup-code terminal-code">
-                                    <span class="code-line"><span class="code-prompt">$</span> netscan --target 192.168.1.0/24</span>
-                                    <span class="code-line"></span>
-                                    <span class="code-line"><span class="code-dim">[INFO]</span> Scanning 254 hosts...</span>
-                                    <span class="code-line"><span class="code-dim">[INFO]</span> 12 hosts discovered</span>
-                                    <span class="code-line"><span class="code-success">[ OK ]</span> Port 22  → SSH OpenSSH 8.9</span>
-                                    <span class="code-line"><span class="code-success">[ OK ]</span> Port 80  → HTTP nginx/1.24</span>
-                                    <span class="code-line"><span class="code-warn">[WARN]</span> Port 443 → TLS cert expired</span>
-                                    <span class="code-line"><span class="code-danger">[CRIT]</span> Port 3306 → MySQL exposed</span>
-                                    <span class="code-line"></span>
-                                    <span class="code-line"><span class="code-dim">[INFO]</span> Report saved → scan.pdf ✓</span>
+                                    <span class="code-line"><span class="code-prompt">$</span> echo "Hello World"</span>
+                                    <span class="code-line">Hello World</span>
+                                    <span class="code-line"><span class="code-prompt">$</span> type echo</span>
+                                    <span class="code-line"><span class="code-dim">echo is a shell builtin</span></span>
+                                    <span class="code-line"><span class="code-prompt">$</span> pwd</span>
+                                    <span class="code-line"><span class="code-dim">/home/naveen/MyShell</span></span>
+                                    <span class="code-line"><span class="code-prompt">$</span> cd src &amp;&amp; ls</span>
+                                    <span class="code-line"><span class="code-success">Main.java</span>  <span class="code-success">Parser.java</span></span>
+                                    <span class="code-line"><span class="code-success">ICommand.java</span>  <span class="code-success">Shell.java</span></span>
+                                    <span class="code-line"><span class="code-prompt">$</span> <span class="code-dim">▌</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 4: Agro-Bloom -->
+            <div class="project-card">
+                <div class="overlay"></div>
+                <div class="project-accent-orb"></div>
+                <div class="project-accent-line"></div>
+                <div class="project-number-bg">04</div>
+                <div class="project-content">
+                    <div class="project-text-column">
+                        <span class="project-category">FULL STACK · AI · AGRITECH</span>
+                        <h3 class="project-title reveal-el">Agro-Bloom</h3>
+                        <div class="project-description reveal-el">
+                            <p>A smart agriculture platform with AI-powered crop recommendations, weather intelligence via Tomorrow.io, a Farm Guru chatbot powered by Gemini, and expert video consultations.</p>
+                        </div>
+                        <ul class="features-list reveal-el">
+                            <li>→ Weather intelligence via Tomorrow.io API</li>
+                            <li>→ AI crop recommendations with scoring engine</li>
+                            <li>→ Farm Guru chatbot powered by Gemini AI</li>
+                            <li>→ Expert connect with WebRTC video calls</li>
+                        </ul>
+                        <div class="project-metadata reveal-el">
+                            <span class="metadata-label">STACK</span>
+                            <p class="tech-stack-content">React · TypeScript · Vite · Supabase · Gemini AI</p>
+                        </div>
+                        <a href="https://github.com/Naein19/agro-bloom" target="_blank" class="github-link reveal-el">View on GitHub ↗</a>
+                    </div>
+                    <div class="project-image-column">
+                        <div class="project-mockup">
+                            <div class="mockup-header">
+                                <div class="mockup-dots"><span></span><span></span><span></span></div>
+                                <span class="mockup-url">agro-bloom/recommend</span>
+                            </div>
+                            <div class="mockup-body">
+                                <div class="mockup-code">
+                                    <span class="code-line"><span class="code-keyword">function</span> <span class="code-func">scoreCrop</span>(crop, weather) {</span>
+                                    <span class="code-line">  <span class="code-keyword">const</span> tempScore = <span class="code-func">calcTemp</span>(</span>
+                                    <span class="code-line">    crop.tempRange, weather.avgTemp</span>
+                                    <span class="code-line">  );</span>
+                                    <span class="code-line">  <span class="code-keyword">const</span> rainScore = <span class="code-func">calcRain</span>(</span>
+                                    <span class="code-line">    crop.waterNeed, weather.rainfall</span>
+                                    <span class="code-line">  );</span>
+                                    <span class="code-line">  <span class="code-keyword">return</span> {</span>
+                                    <span class="code-line">    name: crop.name,</span>
+                                    <span class="code-line">    score: tempScore * <span class="code-num">0.6</span></span>
+                                    <span class="code-line">         + rainScore * <span class="code-num">0.4</span>,</span>
+                                    <span class="code-line">  };</span>
+                                    <span class="code-line">}</span>
                                 </div>
                             </div>
                         </div>
@@ -692,34 +735,94 @@
 
         <!-- Contact Section -->
         <section id="contact">
-            <div class="contact-container">
-                <div class="contact-top-row">
-                    <span class="contact-label">CONTACT</span>
-                    <div class="contact-status">
-                        <span class="status-dot"></span>
-                        <span class="status-text">Available for opportunities</span>
-                    </div>
+            <div class="contact-grid-bg"></div>
+            <div class="contact-gradient-orb"></div>
+            <div class="contact-gradient-orb contact-gradient-orb-2"></div>
+
+            <div class="contact-content">
+                <!-- Section Label -->
+                <div class="contact-section-label">
+                    <span class="contact-label-line"></span>
+                    <span class="contact-label-text">CONTACT</span>
                 </div>
-                <h2 class="contact-heading">Let's build<br>something <em>great</em>.</h2>
-                <a href="mailto:naveentadaka71@gmail.com" class="contact-email-link">naveentadaka71@gmail.com</a>
+
+                <!-- Mega CTA Title -->
+                <h2 class="contact-mega-title">
+                    <span class="mega-line mega-line-sub">LET'S</span>
+                    <span class="mega-line mega-line-main">WORK</span>
+                    <span class="mega-line mega-line-main mega-outline">TOGETHER</span>
+                </h2>
+
+                <!-- Divider -->
                 <div class="contact-divider"></div>
+
+                <!-- Email CTA -->
+                <a href="mailto:naveentadaka71@gmail.com" class="contact-email">
+                    <span class="email-label">SAY HELLO</span>
+                    <span class="email-text">naveentadaka71@gmail.com</span>
+                    <span class="email-arrow">→</span>
+                </a>
+
+                <!-- Info + Socials Row -->
                 <div class="contact-bottom-row">
-                    <div class="contact-socials">
-                        <a href="https://github.com/Naein19" target="_blank" class="contact-social-link">GITHUB</a>
-                        <a href="https://www.linkedin.com/in/naveen-tadaka" target="_blank" class="contact-social-link">LINKEDIN</a>
-                        <a href="mailto:naveentadaka71@gmail.com" class="contact-social-link">EMAIL</a>
+                    <div class="contact-info-col">
+                        <div class="contact-info-block">
+                            <span class="info-label">LOCATION</span>
+                            <span class="info-value">India, IST +5:30</span>
+                        </div>
+                        <div class="contact-info-block">
+                            <span class="info-label">STATUS</span>
+                            <span class="info-value">
+                                <span class="status-indicator"></span>
+                                Open to opportunities
+                            </span>
+                        </div>
                     </div>
-                    <p class="contact-copyright">© 2026 NAVEEN TADAKA</p>
+                    <div class="contact-socials-col">
+                        <a href="https://github.com/Naein19" target="_blank" class="ct-social">
+                            <span class="ct-social-num">01</span>
+                            <span class="ct-social-name">GITHUB</span>
+                            <span class="ct-social-arrow">↗</span>
+                        </a>
+                        <a href="https://www.linkedin.com/in/naveen-tadaka" target="_blank" class="ct-social">
+                            <span class="ct-social-num">02</span>
+                            <span class="ct-social-name">LINKEDIN</span>
+                            <span class="ct-social-arrow">↗</span>
+                        </a>
+                        <a href="#" class="ct-social">
+                            <span class="ct-social-num">03</span>
+                            <span class="ct-social-name">RESUME</span>
+                            <span class="ct-social-arrow">↗</span>
+                        </a>
+                    </div>
                 </div>
             </div>
+
+            <!-- Footer -->
+            <footer class="contact-footer">
+                <div class="footer-inner">
+                    <span class="footer-credit">DESIGNED & BUILT BY NAVEEN TADAKA</span>
+                    <div class="footer-sep"></div>
+                    <span class="footer-year">© 2026</span>
+                </div>
+            </footer>
         </section>
 
     </main>
 
-    <!-- Global Scroll Indicator -->
+    <!-- Status Badge -->
+    <div class="status-badge" id="status-badge">
+        <span class="status-badge-hash">#</span>
+        <span class="status-badge-text" id="status-badge-text"></span>
+        <span class="status-badge-cursor">|</span>
+    </div>
+
+    <!-- Global Scroll Indicator - Premium Mouse Icon -->
     <div class="scroll-indicator" id="global-scroll-indicator">
-        <span>SCROLL</span>
-        <div class="scroll-chevron"></div>
+        <div class="scroll-mouse">
+            <div class="scroll-mouse-dot"></div>
+        </div>
+        <span class="scroll-label">SCROLL</span>
     </div>
 
     <!-- Scripts -->
