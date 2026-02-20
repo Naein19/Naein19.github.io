@@ -1,7 +1,8 @@
 // --- ANIMATIONS ---
 const initLoader = () => {
     console.log('initLoader called');
-    gsap.set('.l-char', { y: 20, opacity: 0 });
+    const hellos = document.querySelectorAll('.loader-hello');
+    gsap.set(hellos, { opacity: 0, scale: 0.8, y: 40 });
     gsap.set('.loader', { display: 'flex', opacity: 1 });
 
     const tl = gsap.timeline({
@@ -14,26 +15,37 @@ const initLoader = () => {
             initHero(() => {
                 window.initAnimations.initZoomAnimation();
                 window.initAnimations.initScrollAnimations();
-                window.initAnimations.initHorizontalSkills(); // Horizontal Scroll
-                window.initAnimations.initProjectStack(); // Project Stack
-                window.initAnimations.initProjectTitleCharacterAnimation(); // Projects Title Character Float
-                window.initAnimations.initProjectContentReveal(); // Project Content Reveal
-                window.initAnimations.initProjectProgress(); // Project Progress Counter
-                // Refresh ScrollTrigger to ensure positions are correct after animations
+                window.initAnimations.initHorizontalSkills();
+                window.initAnimations.initProjectStack();
+                window.initAnimations.initProjectTitleCharacterAnimation();
+                window.initAnimations.initProjectContentReveal();
+                window.initAnimations.initProjectProgress();
                 ScrollTrigger.refresh();
+
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(() => {
+                        setTimeout(() => ScrollTrigger.refresh(), 200);
+                    });
+                }
             });
         }
     });
 
-    tl.to('.l-char', {
-        y: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'power3.out'
-    })
-        .to('.l-char', {
-            y: -50, opacity: 0, stagger: 0.05, duration: 0.5, delay: 0.5, ease: 'power3.in'
-        })
-        .to('.loader', {
-            opacity: 0, duration: 0.5, ease: 'power2.inOut'
-        });
+    // Cycle through each hello word with visible timing
+    hellos.forEach((hello, i) => {
+        const startTime = i * 0.85;
+        tl.to(hello, {
+            opacity: 1, scale: 1, y: 0, duration: 0.35, ease: 'back.out(1.7)'
+        }, startTime)
+        .to(hello, {
+            opacity: 0, scale: 0.8, y: -40, duration: 0.3, ease: 'power2.in'
+        }, startTime + 0.6);
+    });
+
+    // Fade out the loader
+    tl.to('.loader', {
+        opacity: 0, duration: 0.5, ease: 'power2.inOut'
+    }, '+=0.2');
 };
 
 const initHero = (onCompleteCallback) => {
@@ -89,23 +101,27 @@ const initScrollAnimations = () => {
         scrollTrigger: {
             trigger: '#contact',
             start: 'top 70%',
-            toggleActions: 'play none none none'
+            toggleActions: 'play none none none',
         }
     });
 
     contactTl.from('.contact-grid-bg', { opacity: 0, duration: 1.5, ease: 'power2.out' }, 0)
+        .from('.contact-aurora', { opacity: 0, duration: 2, ease: 'power2.out' }, 0)
         .from('.contact-gradient-orb', { scale: 0.5, opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
+        .from('.contact-light-beam', { opacity: 0, duration: 2, ease: 'power2.out' }, 0.3)
         // Section label fade in
         .from('.contact-section-label', { x: -30, opacity: 0, duration: 0.7, ease: 'power3.out' }, 0.1)
         // Cinematic title — sub line slides up with blur
-        .from('.mega-line-sub', { y: 40, opacity: 0, filter: 'blur(6px)', duration: 1, ease: 'power4.out' }, 0.15)
-        // Main lines cascade with refined 3D rotation + optimized blur
-        .from('.mega-line-main', { y: 100, opacity: 0, filter: 'blur(8px)', rotationX: -15, transformOrigin: 'bottom center', stagger: 0.25, duration: 1.4, ease: 'power4.out' }, 0.35)
-        .from('.contact-divider', { scaleX: 0, transformOrigin: 'left center', duration: 0.8, ease: 'power3.inOut' }, 1.0)
-        .from('.contact-email', { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out' }, 1.1)
-        .from('.contact-info-block', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, 1.2)
-        .from('.ct-social', { x: 20, opacity: 0, stagger: 0.1, duration: 0.5, ease: 'power3.out' }, 1.3)
-        .from('.footer-inner', { opacity: 0, y: 15, duration: 0.6, ease: 'power3.out' }, 1.45);
+        .from('.mega-line-sub', { y: 40, opacity: 0, filter: window.innerWidth > 768 ? 'blur(6px)' : 'none', duration: 1, ease: 'power4.out' }, 0.15)
+        // Main lines cascade with refined 3D rotation
+        .from('.mega-line-main', { y: 100, opacity: 0, filter: window.innerWidth > 768 ? 'blur(8px)' : 'none', rotationX: window.innerWidth > 768 ? -15 : 0, transformOrigin: 'bottom center', stagger: 0.25, duration: 1.4, ease: 'power4.out' }, 0.35)
+        .from('.contact-subtitle', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.95)
+        .from('.contact-divider', { scaleX: 0, transformOrigin: 'left center', duration: 0.8, ease: 'power3.inOut' }, 1.1)
+        .from('.contact-availability', { y: 15, opacity: 0, duration: 0.6, ease: 'power3.out' }, 1.3)
+        // Contact cards stagger in from right
+        .fromTo('.contact-card', { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.1, duration: 0.7, ease: 'power3.out' }, 1.2)
+        .from('.contact-location-badge', { y: 10, opacity: 0, duration: 0.5, ease: 'power3.out' }, 1.8)
+        .fromTo('.footer-inner', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 1.9);
 };
 
 const initZoomAnimation = () => {
@@ -113,8 +129,8 @@ const initZoomAnimation = () => {
     const target = document.querySelector('.zoom-target');
     const aboutSection = document.querySelector('#about-section');
     const aboutHeading = document.querySelector('.about-heading');
-    const aboutLines = document.querySelectorAll('.about-line');
-    const aboutStats = document.querySelector('.about-stats');
+    const aboutTextWrapper = document.querySelector('.about-text-wrapper');
+    const aboutLabel = document.querySelector('.about-section-label');
     const statNumbers = document.querySelectorAll('.stat-number');
 
     if (!target || !aboutSection) return;
@@ -150,29 +166,26 @@ const initZoomAnimation = () => {
         top: 0,
         left: 0,
         width: '100%',
-        height: '100vh',
+        height: window.innerHeight + 'px',
         zIndex: 50,
         display: 'flex',
         alignItems: 'stretch',
         justifyContent: 'center',
         backgroundColor: 'var(--bg-color)',
         transformOrigin: "center center",
-        padding: 'clamp(4rem, 6vh, 6rem) 3rem',
+        padding: 'clamp(2rem, 3vh, 3rem) 3rem',
         boxSizing: 'border-box'
     });
 
     gsap.set(aboutHeading, {
         opacity: 0,
-        filter: 'blur(10px)'
+        y: 30
     });
-    gsap.set(aboutLines, {
-        opacity: 0,
-        y: 15,
-        filter: 'blur(10px)'
-    });
-
-    if (aboutStats) {
-        gsap.set(aboutStats, { opacity: 0, y: 30 });
+    if (aboutLabel) {
+        gsap.set(aboutLabel, { opacity: 0, x: -20 });
+    }
+    if (aboutTextWrapper) {
+        gsap.set(aboutTextWrapper, { opacity: 0, y: 25 });
     }
 
     // Parse and store stat targets before any animation
@@ -237,54 +250,60 @@ const initZoomAnimation = () => {
         ease: "power4.out"
     }, 0.35);
 
-    // --- PHASE 3: Text Reveal ---
+    // --- PHASE 3: Content Reveal (clean fade) ---
+    if (aboutLabel) {
+        tl.to(aboutLabel, {
+            opacity: 1,
+            x: 0,
+            duration: 0.5,
+            ease: "power3.out"
+        }, ">-0.5");
+    }
     tl.to(aboutHeading, {
         opacity: 1,
-        filter: 'blur(0px)',
+        y: 0,
         duration: 0.6,
         ease: "power3.out"
     }, ">-0.4")
-        .to(aboutLines, {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            stagger: 0.12,
-            duration: 0.8,
-            ease: "power3.out"
-        }, ">-0.3");
+    .to(aboutTextWrapper, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        onStart: () => {
+            aboutSection.setAttribute('data-visible', '');
+        }
+    }, ">-0.3");
 
-    // --- PHASE 3.5: Stats Counter Reveal ---
-    if (aboutStats) {
-        tl.to(aboutStats, {
-            opacity: 1,
-            y: 0,
+    // --- PHASE 3.5: Stats & Credentials Reveal ---
+    tl.to('.about-stats', {
+        opacity: 1,
+        duration: 0.6,
+        ease: "power3.out"
+    }, "<0.3");
+    tl.to('.about-credentials', {
+        opacity: 1,
+        duration: 0.6,
+        ease: "power3.out"
+    }, "<0.1");
+
+    // --- PHASE 3.6: Stats Counter ---
+    statData.forEach(({ el, targetVal, suffix, proxy }) => {
+        tl.to(proxy, {
+            val: targetVal,
             duration: 0.8,
-            ease: "power3.out",
-            onStart: () => {
-                aboutSection.setAttribute('data-visible', '');
+            ease: "power2.out",
+            onUpdate: () => {
+                el.textContent = Math.round(proxy.val) + suffix;
             }
-        }, ">-0.3");
-
-        // Counter animations as part of scrub timeline (reverses properly)
-        statData.forEach(({ el, targetVal, suffix, proxy }) => {
-            tl.to(proxy, {
-                val: targetVal,
-                duration: 0.8,
-                ease: "power2.out",
-                onUpdate: () => {
-                    el.textContent = Math.round(proxy.val) + suffix;
-                }
-            }, "<");
-        });
-    }
+        }, "<");
+    });
 
     // --- PHASE 4: Exit Animation (Fade Up) ---
-    const exitEls = [aboutHeading, ...aboutLines];
-    if (aboutStats) exitEls.push(aboutStats);
+    const exitEls = aboutLabel ? [aboutLabel, aboutHeading, aboutTextWrapper] : [aboutHeading, aboutTextWrapper];
     tl.to(exitEls, {
         y: -80,
         opacity: 0,
-        filter: 'blur(10px)',
         duration: 0.8,
         stagger: 0.08,
         ease: "power2.in"
@@ -326,14 +345,24 @@ const initHorizontalSkills = () => {
                 scrollTrigger: {
                     trigger: skillsSection,
                     start: "top 80%",
-                    toggleActions: "play none none reverse"
+                    toggleActions: "play none none reverse",
+                    invalidateOnRefresh: true,
                 }
             });
         },
 
         // Mobile: vertical stacking with fade-in reveals
         "(max-width: 768px)": function () {
-            gsap.set('.skills-heading', { opacity: 1, y: 0 });
+            // Skills heading: show only while inside skills section
+            ScrollTrigger.create({
+                trigger: skillsSection,
+                start: 'top 80%',
+                end: 'bottom 20%',
+                onEnter: () => gsap.to('.skills-heading', { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }),
+                onLeave: () => gsap.to('.skills-heading', { opacity: 0, y: -20, duration: 0.3, ease: 'power2.in' }),
+                onEnterBack: () => gsap.to('.skills-heading', { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }),
+                onLeaveBack: () => gsap.to('.skills-heading', { opacity: 0, y: 20, duration: 0.3, ease: 'power2.in' }),
+            });
             panels.forEach((panel) => {
                 ScrollTrigger.create({
                     trigger: panel,
@@ -448,13 +477,13 @@ const initProjectTitleCharacterAnimation = () => {
         }
     );
 
-    // Projects background watermark reveal
-    const bgText = document.querySelector('.projects-bg-text');
-    if (bgText) {
-        gsap.fromTo(bgText,
-            { autoAlpha: 0, scale: 0.75, filter: 'blur(20px)' },
+    // Projects shadow text reveal
+    const shadowText = document.querySelector('.projects-shadow-text');
+    if (shadowText) {
+        gsap.fromTo(shadowText,
+            { autoAlpha: 0, y: -10 },
             {
-                autoAlpha: 1, scale: 1, filter: 'blur(0px)',
+                autoAlpha: 1, y: 0,
                 duration: 1.5,
                 ease: 'power2.out',
                 scrollTrigger: {
@@ -462,6 +491,7 @@ const initProjectTitleCharacterAnimation = () => {
                     start: 'top 85%',
                     end: 'center center',
                     scrub: true,
+                    invalidateOnRefresh: true,
                 }
             }
         );
@@ -484,7 +514,7 @@ const initProjectContentReveal = () => {
             scrollTrigger: {
                 trigger: card,
                 start: 'top 75%',
-                toggleActions: 'play none none none'
+                toggleActions: 'play none none none',
             }
         });
 
@@ -503,7 +533,7 @@ const initProjectContentReveal = () => {
                     trigger: card,
                     start: 'top bottom',
                     end: 'bottom top',
-                    scrub: true
+                    scrub: true,
                 }
             });
         }

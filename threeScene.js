@@ -66,9 +66,13 @@ try {
 
         requestAnimationFrame(draw);
 
+        let _resizeTimer;
         window.addEventListener('resize', () => {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
+            clearTimeout(_resizeTimer);
+            _resizeTimer = setTimeout(() => {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }, 150);
         });
     }
 } catch (e) {

@@ -94,6 +94,16 @@ console.log('Script.js loaded');
 // --- MAIN SCRIPT ---
 window.addEventListener('load', () => {
     console.log('Window Loaded');
+
+    // --- Cross-platform viewport height fix (mobile address bar differences) ---
+    function setVh() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', vh + 'px');
+    }
+    setVh();
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', () => setTimeout(setVh, 150));
+
     let lenis;
     try {
         // Initialize Lenis
@@ -126,6 +136,13 @@ window.addEventListener('load', () => {
         }
     } catch (e) {
         console.error('Lenis Error:', e);
+    }
+
+    // --- Cross-platform ScrollTrigger config ---
+    if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.config({
+            ignoreMobileResize: true,
+        });
     }
 
     // --- Smooth Scroll for Nav Links (works with pinned ScrollTrigger sections) ---
@@ -280,6 +297,59 @@ window.addEventListener('load', () => {
                         },
                     });
                 }
+
+                // --- Active Nav Link Tracking ---
+                (function initActiveNavTracking() {
+                    const allNavLinks = document.querySelectorAll('.nav-link, .mobile-link');
+                    let currentHref = '#hero';
+
+                    function setActive(href) {
+                        if (currentHref === href) return;
+                        currentHref = href;
+                        allNavLinks.forEach(l => {
+                            l.classList.toggle('active', l.getAttribute('href') === href);
+                        });
+                    }
+
+                    setActive('#hero');
+
+                    let ticking = false;
+                    window.addEventListener('scroll', () => {
+                        if (ticking) return;
+                        ticking = true;
+                        requestAnimationFrame(() => {
+                            checkActiveSection();
+                            ticking = false;
+                        });
+                    }, { passive: true });
+
+                    function checkActiveSection() {
+                        const vh = window.innerHeight;
+                        // Check sections bottom-to-top; first whose top is above viewport center wins
+                        const sections = [
+                            { id: '#contact', el: document.querySelector('#contact') },
+                            { id: '#projects-section', el: document.querySelector('#projects-section') },
+                            { id: '#skills-section', el: document.querySelector('#skills-section') },
+                        ];
+
+                        for (const { id, el } of sections) {
+                            if (!el) continue;
+                            if (el.getBoundingClientRect().top <= vh * 0.5) {
+                                setActive(id);
+                                return;
+                            }
+                        }
+
+                        // About section is a fixed overlay — check its computed opacity
+                        const about = document.querySelector('#about-section');
+                        if (about && parseFloat(window.getComputedStyle(about).opacity) > 0.5) {
+                            setActive('#about-section');
+                            return;
+                        }
+
+                        setActive('#hero');
+                    }
+                })();
             } else {
                 console.error('initAnimations object not found on window');
             }
@@ -307,7 +377,7 @@ window.addEventListener('load', () => {
             gsap.to('.hero-title-last .char', { y: 0, autoAlpha: 1 });
             gsap.to('.hero-subtitle', { y: 0, autoAlpha: 1 });
         }
-    }, 5000);
+    }, 10000);
 
     // --- Mobile Menu Toggle ---
     const menuToggle = document.getElementById('menu-toggle');
@@ -370,3 +440,55 @@ window.addEventListener('load', () => {
         typeStatus();
     })();
 });
+
+// --- CONTACT MEGA TITLE TYPING EFFECT ---
+(function initContactTyping() {
+    const words = ['IDEA?', 'PROJECT?', 'VISION?', 'DREAM?'];
+    const el = document.getElementById('contact-typed-word');
+    if (!el) return;
+
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function type() {
+        const currentWord = words[wordIndex];
+
+        if (isDeleting) {
+            charIndex--;
+            el.textContent = currentWord.substring(0, charIndex);
+        } else {
+            charIndex++;
+            el.textContent = currentWord.substring(0, charIndex);
+        }
+
+        let delay = isDeleting ? 50 : 100;
+
+        if (!isDeleting && charIndex === currentWord.length) {
+            delay = 2200;
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+            delay = 400;
+        }
+
+        setTimeout(type, delay);
+    }
+
+    type();
+})();
+
+// --- CONTACT CARD MOUSE GLOW ---
+(function initContactCardGlow() {
+    document.addEventListener('mousemove', (e) => {
+        const cards = document.querySelectorAll('.contact-card');
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            card.style.setProperty('--mouse-x', x + '%');
+            card.style.setProperty('--mouse-y', y + '%');
+        });
+    });
+})();
