@@ -101,7 +101,7 @@ window.addEventListener('load', () => {
         document.documentElement.style.setProperty('--vh', vh + 'px');
     }
     setVh();
-    window.addEventListener('resize', setVh);
+    window.addEventListener('resize', setVh, { passive: true });
     window.addEventListener('orientationchange', () => setTimeout(setVh, 150));
 
     let lenis;
@@ -355,13 +355,18 @@ window.addEventListener('load', () => {
             }
         } else {
             console.error('GSAP not defined');
-            // Fallback to visible
+            // Comprehensive fallback — reveal all content without animations
             document.body.classList.remove('loading');
-            document.querySelector('.loader').style.display = 'none';
-            document.querySelector('.hero-content').style.opacity = 1;
+            document.body.classList.add('no-gsap');
+            var loader = document.querySelector('.loader');
+            if (loader) loader.style.display = 'none';
         }
     } catch (e) {
         console.error('Animation Init Error:', e);
+        document.body.classList.remove('loading');
+        document.body.classList.add('no-gsap');
+        var loader = document.querySelector('.loader');
+        if (loader) loader.style.display = 'none';
     }
 
     // Failsafe
@@ -372,10 +377,14 @@ window.addEventListener('load', () => {
             console.log('Removing loader via Failsafe');
             loader.style.display = 'none';
             document.body.classList.remove('loading');
-            // Force reveal
-            gsap.to('.hero-title .char', { y: 0, autoAlpha: 1 });
-            gsap.to('.hero-title-last .char', { y: 0, autoAlpha: 1 });
-            gsap.to('.hero-subtitle', { y: 0, autoAlpha: 1 });
+            // Force reveal — check if GSAP is available
+            if (typeof gsap !== 'undefined') {
+                gsap.to('.hero-title .char', { y: 0, autoAlpha: 1 });
+                gsap.to('.hero-title-last .char', { y: 0, autoAlpha: 1 });
+                gsap.to('.hero-subtitle', { y: 0, autoAlpha: 1 });
+            } else {
+                document.body.classList.add('no-gsap');
+            }
         }
     }, 10000);
 

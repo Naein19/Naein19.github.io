@@ -8,7 +8,7 @@
 
 <br/><br/>
 
-[![Portfolio](https://img.shields.io/badge/◆_LIVE_PORTFOLIO-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://naein.github.io)
+[![Portfolio](https://img.shields.io/badge/◆_LIVE_PORTFOLIO-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://naein19.github.io)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A0A0A?style=for-the-badge&logo=linkedin&logoColor=0077B5)](https://linkedin.com/in/naveentadaka)
 [![GitHub](https://img.shields.io/badge/GitHub-0A0A0A?style=for-the-badge&logo=github&logoColor=white)](https://github.com/naveentadaka)
 
