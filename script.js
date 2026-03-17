@@ -179,7 +179,7 @@ window.addEventListener('load', () => {
         }
 
         // SKILLS → find its own pin ScrollTrigger
-        if (targetSelector === '#skills-section') {
+        if (targetSelector === '#skills') {
             const skillsST = findSTByTriggerEl(target);
             if (skillsST) {
                 doScroll(skillsST.start);
@@ -244,7 +244,7 @@ window.addEventListener('load', () => {
                 setTimeout(flashScrollIndicator, 2500);
 
                 // Show on entering each section
-                ['#skills-section', '#projects-section', '#contact'].forEach(selector => {
+                ['#skills', '#projects-section', '#contact'].forEach(selector => {
                     const el = document.querySelector(selector);
                     if (el) {
                         ScrollTrigger.create({
@@ -262,7 +262,7 @@ window.addEventListener('load', () => {
                 // We'll add a progress-based trigger for about via a small onUpdate check
                 let aboutShown = false;
                 if (heroST) {
-                    heroST.animation && heroST.animation.eventCallback && heroST.animation.eventCallback('onUpdate', function() {
+                    heroST.animation && heroST.animation.eventCallback && heroST.animation.eventCallback('onUpdate', function () {
                         const p = this.progress();
                         if (p > 0.35 && p < 0.5 && !aboutShown) {
                             aboutShown = true;
@@ -329,7 +329,7 @@ window.addEventListener('load', () => {
                         const sections = [
                             { id: '#contact', el: document.querySelector('#contact') },
                             { id: '#projects-section', el: document.querySelector('#projects-section') },
-                            { id: '#skills-section', el: document.querySelector('#skills-section') },
+                            { id: '#skills', el: document.querySelector('#skills') },
                         ];
 
                         for (const { id, el } of sections) {

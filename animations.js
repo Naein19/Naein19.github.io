@@ -14,6 +14,7 @@ const initLoader = () => {
             // Start Hero, then Zoom, then Scroll
             initHero(() => {
                 window.initAnimations.initZoomAnimation();
+                window.initAnimations.initExperienceTimeline();
                 window.initAnimations.initScrollAnimations();
                 window.initAnimations.initHorizontalSkills();
                 window.initAnimations.initProjectStack();
@@ -37,9 +38,9 @@ const initLoader = () => {
         tl.to(hello, {
             opacity: 1, scale: 1, y: 0, duration: 0.35, ease: 'back.out(1.7)'
         }, startTime)
-        .to(hello, {
-            opacity: 0, scale: 0.8, y: -40, duration: 0.3, ease: 'power2.in'
-        }, startTime + 0.6);
+            .to(hello, {
+                opacity: 0, scale: 0.8, y: -40, duration: 0.3, ease: 'power2.in'
+            }, startTime + 0.6);
     });
 
     // Fade out the loader
@@ -59,37 +60,37 @@ const initHero = (onCompleteCallback) => {
         y: 0, autoAlpha: 1, duration: 0.6, ease: 'power4.out'
     }, 0.05)
 
-    // 2. First name: tight cinematic character stagger
-    .to('.hero-title .char', {
-        y: 0, autoAlpha: 1, rotation: 0, filter: 'blur(0px)',
-        stagger: { each: 0.04, from: 'start' },
-        duration: 0.9, ease: 'expo.out'
-    }, 0.2)
+        // 2. First name: tight cinematic character stagger
+        .to('.hero-title .char', {
+            y: 0, autoAlpha: 1, rotation: 0, filter: 'blur(0px)',
+            stagger: { each: 0.04, from: 'start' },
+            duration: 0.9, ease: 'expo.out'
+        }, 0.2)
 
-    // 3. Last name overlaps first — cinematic cascade
-    .to('.hero-title-last .char', {
-        y: 0, autoAlpha: 1, rotation: 0, filter: 'blur(0px)',
-        stagger: { each: 0.04, from: 'start' },
-        duration: 0.9, ease: 'expo.out'
-    }, 0.36)
+        // 3. Last name overlaps first — cinematic cascade
+        .to('.hero-title-last .char', {
+            y: 0, autoAlpha: 1, rotation: 0, filter: 'blur(0px)',
+            stagger: { each: 0.04, from: 'start' },
+            duration: 0.9, ease: 'expo.out'
+        }, 0.36)
 
-    // 4. Decorative line — deliberate, cinematic draw
-    .to('.hero-line', {
-        scaleX: 1, duration: 1, ease: 'power2.inOut'
-    }, 0.7)
+        // 4. Decorative line — deliberate, cinematic draw
+        .to('.hero-line', {
+            scaleX: 1, duration: 1, ease: 'power2.inOut'
+        }, 0.7)
 
-    // 5. Subtitle breathes in
-    .to('.hero-subtitle', {
-        y: 0, autoAlpha: 1, duration: 0.9, ease: 'power3.out'
-    }, 0.85)
+        // 5. Subtitle breathes in
+        .to('.hero-subtitle', {
+            y: 0, autoAlpha: 1, duration: 0.9, ease: 'power3.out'
+        }, 0.85)
 
-    // 6. Tags cascade with refined spring
-    .to('.exp-tag', {
-        y: 0, autoAlpha: 1,
-        stagger: 0.06,
-        duration: 0.6,
-        ease: 'back.out(1.7)'
-    }, 1.1);
+        // 6. Tags cascade with refined spring
+        .to('.exp-tag', {
+            y: 0, autoAlpha: 1,
+            stagger: 0.06,
+            duration: 0.6,
+            ease: 'back.out(1.7)'
+        }, 1.1);
 };
 
 const initScrollAnimations = () => {
@@ -131,19 +132,11 @@ const initZoomAnimation = () => {
     const aboutHeading = document.querySelector('.about-heading');
     const aboutTextWrapper = document.querySelector('.about-text-wrapper');
     const aboutLabel = document.querySelector('.about-section-label');
-    const statNumbers = document.querySelectorAll('.stat-number');
+    const aboutLeftColumn = document.querySelector('.about-column-left');
+    const aboutRightColumn = document.querySelector('.about-column-right');
+    const aboutSideIdentity = document.querySelector('.about-side-identity');
 
-    if (!target || !aboutSection) return;
-
-    // Reset/Sanity check: Only one About section should exist
-    const aboutCount = document.querySelectorAll('#about-section').length;
-    if (aboutCount > 1) {
-        console.warn(`Found ${aboutCount} About sections. Removing duplicates...`);
-        const allAbouts = document.querySelectorAll('#about-section');
-        for (let i = 1; i < allAbouts.length; i++) {
-            allAbouts[i].remove();
-        }
-    }
+    if (!target || !aboutSection || window.innerWidth <= 1024) return;
 
     const getCenterCoords = () => {
         const rect = target.getBoundingClientRect();
@@ -156,51 +149,33 @@ const initZoomAnimation = () => {
     };
 
     // --- INITIAL STATES ---
-    // About section is a fixed overlay (NOT pinned separately)
     gsap.set(aboutSection, {
         opacity: 0,
         scale: 0.85,
         autoAlpha: 0,
         visibility: 'visible',
-        position: 'fixed',
+        position: window.innerWidth > 1024 ? 'fixed' : 'relative',
         top: 0,
         left: 0,
         width: '100%',
-        height: window.innerHeight + 'px',
+        height: window.innerWidth > 1024 ? '100vh' : 'auto',
         zIndex: 50,
         display: 'flex',
-        alignItems: 'stretch',
+        alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'var(--bg-color)',
         transformOrigin: "center center",
-        padding: 'clamp(2rem, 3vh, 3rem) 3rem',
         boxSizing: 'border-box'
     });
 
-    gsap.set(aboutHeading, {
-        opacity: 0,
-        y: 30
-    });
+    gsap.set([aboutHeading, aboutLeftColumn, aboutRightColumn], { opacity: 0, y: 30 });
     if (aboutLabel) {
         gsap.set(aboutLabel, { opacity: 0, x: -20 });
     }
-    if (aboutTextWrapper) {
-        gsap.set(aboutTextWrapper, { opacity: 0, y: 25 });
+    if (aboutSideIdentity) {
+        gsap.set(aboutSideIdentity, { opacity: 0, x: -30 });
     }
 
-    // Parse and store stat targets before any animation
-    const statData = [];
-    statNumbers.forEach(el => {
-        const text = el.textContent.trim();
-        const numMatch = text.match(/(\d+)/);
-        const targetVal = numMatch ? parseInt(numMatch[1]) : 0;
-        const suffix = text.replace(/\d+/, '');
-        statData.push({ el, targetVal, suffix, proxy: { val: 0 } });
-        el.textContent = '0' + suffix;
-    });
-
-    // Single pin on Hero drives the entire hero→about sequence.
-    // pinSpacing: true ensures the skills section sits right after the spacer — no blank gap.
     const tl = gsap.timeline({
         scrollTrigger: {
             trigger: '#hero',
@@ -213,7 +188,7 @@ const initZoomAnimation = () => {
         }
     });
 
-    // --- PHASE 1: Zoom Animation (Letter 'A') ---
+    // --- PHASE 1: Zoom Animation ---
     tl.fromTo(target,
         { scale: 1, x: 0, y: 0, opacity: 1 },
         {
@@ -224,12 +199,7 @@ const initZoomAnimation = () => {
             duration: 1,
             ease: "power2.inOut"
         })
-        // Fade out the zoom target itself once it's scaled large (prevents giant white 'A' blank)
-        .to(target, {
-            autoAlpha: 0,
-            duration: 0.3,
-        }, 0.4)
-        // Cinematic parallax exit — elements scatter for depth
+        .to(target, { autoAlpha: 0, duration: 0.3 }, 0.4)
         .to('.hero-role-badge', { autoAlpha: 0, y: -40, duration: 0.35, ease: 'power2.in' }, 0)
         .to('.hero-title .char:not(.zoom-target)', { autoAlpha: 0, duration: 0.4 }, 0)
         .to('.hero-title-last', { autoAlpha: 0, y: 20, duration: 0.4 }, 0)
@@ -237,12 +207,9 @@ const initZoomAnimation = () => {
         .to('.hero-line', { autoAlpha: 0, scaleX: 0, duration: 0.3 }, 0)
         .to('.hero-expertise', { autoAlpha: 0, y: 50, duration: 0.35 }, 0)
         .to('.hero-glow-orb', { autoAlpha: 0, scale: 1.4, duration: 0.5 }, 0)
-        .to('#bg-canvas', {
-            autoAlpha: 0,
-            duration: 0.4
-        }, 0);
+        .to('#bg-canvas', { autoAlpha: 0, duration: 0.4 }, 0);
 
-    // --- PHASE 2: About Section "Popup" (starts early, overlaps with zoom) ---
+    // --- PHASE 2: About Section "Popup" ---
     tl.to(aboutSection, {
         autoAlpha: 1,
         scale: 1,
@@ -250,74 +217,111 @@ const initZoomAnimation = () => {
         ease: "power4.out"
     }, 0.35);
 
-    // --- PHASE 3: Content Reveal (clean fade) ---
-    if (aboutLabel) {
-        tl.to(aboutLabel, {
-            opacity: 1,
-            x: 0,
-            duration: 0.5,
-            ease: "power3.out"
-        }, ">-0.5");
+    // --- PHASE 3: Content Reveal ---
+    if (aboutSideIdentity) {
+        tl.to(aboutSideIdentity, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, ">-0.5");
+    } else if (aboutLabel) {
+        tl.to(aboutLabel, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, ">-0.5");
     }
-    tl.to(aboutHeading, {
+
+    tl.to([aboutHeading, aboutLeftColumn], {
         opacity: 1,
         y: 0,
-        duration: 0.6,
+        stagger: 0.1,
+        duration: 0.7,
         ease: "power3.out"
     }, ">-0.4")
-    .to(aboutTextWrapper, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        onStart: () => {
-            aboutSection.setAttribute('data-visible', '');
-        }
-    }, ">-0.3");
-
-    // --- PHASE 3.5: Stats & Credentials Reveal ---
-    tl.to('.about-stats', {
-        opacity: 1,
-        duration: 0.6,
-        ease: "power3.out"
-    }, "<0.3");
-    tl.to('.about-credentials', {
-        opacity: 1,
-        duration: 0.6,
-        ease: "power3.out"
-    }, "<0.1");
-
-    // --- PHASE 3.6: Stats Counter ---
-    statData.forEach(({ el, targetVal, suffix, proxy }) => {
-        tl.to(proxy, {
-            val: targetVal,
+        .to(aboutRightColumn, {
+            opacity: 1,
+            y: 0,
             duration: 0.8,
-            ease: "power2.out",
-            onUpdate: () => {
-                el.textContent = Math.round(proxy.val) + suffix;
+            ease: "power3.out",
+            onStart: () => {
+                aboutSection.setAttribute('data-visible', '');
             }
-        }, "<");
-    });
+        }, ">-0.3");
 
-    // --- PHASE 4: Exit Animation (Fade Up) ---
-    const exitEls = aboutLabel ? [aboutLabel, aboutHeading, aboutTextWrapper] : [aboutHeading, aboutTextWrapper];
-    tl.to(exitEls, {
-        y: -80,
+    // --- PHASE 4: Exit Animation (Desktop Only) ---
+    tl.to([aboutSideIdentity, aboutLabel, aboutHeading, aboutLeftColumn, aboutRightColumn].filter(Boolean), {
+        y: -60,
         opacity: 0,
         duration: 0.8,
-        stagger: 0.08,
+        stagger: 0.05,
         ease: "power2.in"
-    }, ">0.15")
-        // --- PHASE 5: Fade out about overlay ---
-        .to(aboutSection, {
-            autoAlpha: 0,
-            duration: 0.5
-        }, ">-0.2");
+    }, ">0.2")
+        .to(aboutSection, { autoAlpha: 0, duration: 0.5 }, ">-0.2");
+};
+
+const initExperienceTimeline = () => {
+    console.log('initExperienceTimeline called');
+    const section = document.querySelector('#experience-section');
+    const entries = gsap.utils.toArray('.timeline-entry');
+    const line = document.querySelector('.timeline-line');
+
+    if (!section || entries.length === 0) return;
+
+    // Header reveal (Desktop only - handled by media query in CSS for mobile)
+    if (window.innerWidth > 1024) {
+        gsap.fromTo('#experience-section .section-header',
+            { opacity: 0, x: -30 },
+            {
+                opacity: 1, x: 0,
+                duration: 1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '#experience-section',
+                    start: "top 80%",
+                    end: "bottom 20%",
+                    toggleActions: "play reverse play reverse",
+                }
+            }
+        );
+    }
+
+    // Line drawing animation
+    gsap.fromTo(line,
+        { scaleY: 0, transformOrigin: "top center" },
+        {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+                trigger: '.timeline-container',
+                start: "top 70%",
+                end: "bottom 80%",
+                scrub: 1
+            }
+        }
+    );
+
+    // Sequential reveal for entries
+    entries.forEach((entry, i) => {
+        const marker = entry.querySelector('.timeline-marker');
+        const card = entry.querySelector('.timeline-card');
+
+        gsap.fromTo([marker, card],
+            {
+                opacity: 0,
+                y: 30
+            },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power2.out",
+                stagger: 0.12,
+                scrollTrigger: {
+                    trigger: entry,
+                    start: "top 88%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+    });
 };
 
 const initHorizontalSkills = () => {
     console.log('initHorizontalSkills called');
-    const skillsSection = document.querySelector('#skills-section');
+    const skillsSection = document.querySelector('#skills');
     const skillsContainer = document.querySelector('#skills-container');
     const panels = gsap.utils.toArray('.skill-panel');
 
@@ -339,13 +343,16 @@ const initHorizontalSkills = () => {
                     invalidateOnRefresh: true,
                 }
             });
-
-            gsap.fromTo('.skills-heading', { opacity: 0, y: 50 }, {
+        },
+        // Title reveal for all screen sizes
+        "all": function () {
+            gsap.fromTo('.skills-heading', { opacity: 0, y: 30 }, {
                 opacity: 1, y: 0,
                 scrollTrigger: {
                     trigger: skillsSection,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse",
+                    start: "top 90%",
+                    end: () => "+=" + (skillsContainer.scrollWidth + window.innerWidth),
+                    toggleActions: "play reverse play reverse",
                     invalidateOnRefresh: true,
                 }
             });
@@ -353,27 +360,14 @@ const initHorizontalSkills = () => {
 
         // Mobile: vertical stacking with fade-in reveals
         "(max-width: 768px)": function () {
-            // Skills heading: show only while inside skills section
-            ScrollTrigger.create({
-                trigger: skillsSection,
-                start: 'top 80%',
-                end: 'bottom 20%',
-                onEnter: () => gsap.to('.skills-heading', { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }),
-                onLeave: () => gsap.to('.skills-heading', { opacity: 0, y: -20, duration: 0.3, ease: 'power2.in' }),
-                onEnterBack: () => gsap.to('.skills-heading', { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }),
-                onLeaveBack: () => gsap.to('.skills-heading', { opacity: 0, y: 20, duration: 0.3, ease: 'power2.in' }),
-            });
-            panels.forEach((panel) => {
-                ScrollTrigger.create({
-                    trigger: panel,
-                    start: 'top 85%',
-                    onEnter: () => {
-                        gsap.fromTo(panel,
-                            { opacity: 0, y: 40 },
-                            { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-                        );
-                    },
-                    once: true
+            panels.forEach(panel => {
+                gsap.fromTo(panel, { opacity: 0, y: 30 }, {
+                    opacity: 1, y: 0,
+                    scrollTrigger: {
+                        trigger: panel,
+                        start: "top 80%",
+                        toggleActions: "play none none reverse"
+                    }
                 });
             });
         }
@@ -381,264 +375,84 @@ const initHorizontalSkills = () => {
 };
 
 const initProjectStack = () => {
-    console.log('initProjectStack called');
-    const pinCards = gsap.utils.toArray(".project-card");
-
-    if (pinCards.length === 0) return;
-
-    // Skip card stacking on tablet/mobile — cards use column layout and may exceed viewport height
-    if (window.innerWidth <= 992) return;
-
-    pinCards.forEach((eachCard, index) => {
-        if (index < pinCards.length - 1) {
-            ScrollTrigger.create({
-                trigger: eachCard,
-                start: "top top",
-                endTrigger: pinCards[pinCards.length - 1],
-                end: "top top",
-                pin: true,
-                pinSpacing: false,
-                invalidateOnRefresh: true,
-                id: `pin-${index}`
-            });
-
-            ScrollTrigger.create({
-                trigger: pinCards[index + 1],
-                start: "top bottom",
-                end: "top top",
-                onUpdate: (self) => {
-                    const rawProgress = self.progress;
-                    // Delay: card stays fully visible for 25% of scroll before transitioning
-                    const progress = Math.max(0, (rawProgress - 0.25) / 0.75);
-
-                    // Clean transform: only scale + slight y-shift (NO rotation = NO blur)
-                    gsap.set(eachCard, {
-                        scale: 1 - progress * 0.05,
-                        y: -progress * 30,
-                    });
-
-                    const overlay = eachCard.querySelector(".overlay");
-                    if (overlay) {
-                        gsap.set(overlay, {
-                            opacity: progress * 0.6
-                        });
-                    }
-                }
-            });
-        }
-    });
+    // No-op: pinned full-height cards are removed in the new cinematic layout
+    console.log('initProjectStack: cinematic layout — skipping pin logic');
 };
 
 const initProjectTitleCharacterAnimation = () => {
     console.log('initProjectTitleCharacterAnimation called');
-    const title = document.querySelector('#project-title');
-    const intro = document.querySelector('#projects-intro');
-    if (!title || !intro) return;
+    const header = document.querySelector('.projects-header');
+    if (!header) return;
 
-    // Split title text into characters
-    const text = title.textContent;
-    title.innerHTML = '';
-    text.split('').forEach(char => {
-        const span = document.createElement('span');
-        span.textContent = char === ' ' ? '\u00A0' : char;
-        span.className = 'char';
-        title.appendChild(span);
-    });
+    const chars = header.querySelectorAll('.char');
+    if (chars.length === 0) return;
 
-    const chars = title.querySelectorAll('.char');
-
-    // Character reveal animation (scroll-driven)
     gsap.fromTo(chars,
+        { opacity: 0, yPercent: 110, scaleY: 2, scaleX: 0.75, transformOrigin: '50% 0%', filter: 'blur(8px)' },
         {
-            opacity: 0,
-            yPercent: 120,
-            scaleY: 2.3,
-            scaleX: 0.7,
-            transformOrigin: "50% 0%",
-            filter: "blur(8px)"
-        },
-        {
-            opacity: 1,
-            yPercent: 0,
-            scaleY: 1,
-            scaleX: 1,
-            filter: "blur(0px)",
-            duration: 1,
-            ease: "back.inOut(2)",
-            stagger: 0.06,
+            opacity: 1, yPercent: 0, scaleY: 1, scaleX: 1, filter: 'blur(0px)',
+            duration: 1, ease: 'back.inOut(2)', stagger: 0.045,
             scrollTrigger: {
-                trigger: intro,
-                start: "top 80%",
-                end: "center center",
+                trigger: header,
+                start: 'top 80%',
+                end: 'center center',
                 scrub: true,
-                invalidateOnRefresh: true,
-                id: "project-title-anim"
+                invalidateOnRefresh: true
             }
         }
     );
 
-    // Projects shadow text reveal
-    const shadowText = document.querySelector('.projects-shadow-text');
-    if (shadowText) {
-        gsap.fromTo(shadowText,
-            { autoAlpha: 0, y: -10 },
+    // Animate label row and meta
+    gsap.fromTo(['.projects-label-row', '.projects-header-meta'],
+        { opacity: 0, y: 20 },
+        {
+            opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out',
+            scrollTrigger: { trigger: header, start: 'top 75%', toggleActions: 'play none none none' }
+        }
+    );
+};
+
+const initProjectContentReveal = () => {
+    // 1. Fixed Header Reveal (Desktop only)
+    if (window.innerWidth > 1024) {
+        gsap.fromTo('.projects-minimal-header',
+            { opacity: 0, x: -30 },
             {
-                autoAlpha: 1, y: 0,
-                duration: 1.5,
-                ease: 'power2.out',
+                opacity: 1, x: 0,
+                duration: 1,
+                ease: 'power3.out',
                 scrollTrigger: {
-                    trigger: intro,
-                    start: 'top 85%',
-                    end: 'center center',
-                    scrub: true,
-                    invalidateOnRefresh: true,
+                    trigger: '#projects-section',
+                    // Delayed appearance to prevent overlap with skills
+                    start: "top 60%",
+                    end: "bottom 20%",
+                    toggleActions: "play reverse play reverse",
                 }
             }
         );
     }
-};
 
-const initProjectContentReveal = () => {
-    console.log('initProjectContentReveal called');
-    const cards = gsap.utils.toArray('.project-card');
-    if (cards.length === 0) return;
-
-    cards.forEach((card, index) => {
-        const category = card.querySelector('.project-category');
-        const revealEls = card.querySelectorAll('.reveal-el');
-        const mockup = card.querySelector('.project-mockup');
-        const numberBg = card.querySelector('.project-number-bg');
-        const codeLines = card.querySelectorAll('.code-line');
-
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: card,
-                start: 'top 75%',
-                toggleActions: 'play none none none',
-            }
-        });
-
-        // Watermark number — cinematic scale in + scroll parallax
-        if (numberBg) {
-            tl.fromTo(numberBg,
-                { autoAlpha: 0, scale: 0.85 },
-                { autoAlpha: 1, scale: 1, duration: 1.4, ease: 'power2.out' },
-                0
-            );
-            // Subtle upward drift as user scrolls through card
-            gsap.to(numberBg, {
-                yPercent: -15,
-                ease: 'none',
+    // 2. Project Rows reveal - clean vertical showcase
+    const projectRows = gsap.utils.toArray('.project-row');
+    projectRows.forEach((row) => {
+        gsap.fromTo(row,
+            { opacity: 0, y: 30 },
+            {
+                opacity: 1, y: 0,
+                duration: 1.2, ease: 'power2.out',
                 scrollTrigger: {
-                    trigger: card,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: true,
+                    trigger: row,
+                    start: 'top 82%',
+                    toggleActions: 'play none none none'
                 }
-            });
-        }
-
-        // Accent orb fade in
-        const accentOrb = card.querySelector('.project-accent-orb');
-        if (accentOrb) {
-            tl.fromTo(accentOrb,
-                { autoAlpha: 0, scale: 0.8 },
-                { autoAlpha: 1, scale: 1, duration: 1.5, ease: 'power2.out' },
-                0
-            );
-        }
-
-        // Category label slide in
-        if (category) {
-            tl.fromTo(category,
-                { autoAlpha: 0, x: -30 },
-                { autoAlpha: 1, x: 0, duration: 0.7, ease: 'power3.out' },
-                0.1
-            );
-        }
-
-        // Text elements stagger reveal
-        if (revealEls.length > 0) {
-            tl.fromTo(revealEls,
-                { autoAlpha: 0, y: 35 },
-                { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out' },
-                0.2
-            );
-        }
-
-        // Mockup slide in with subtle 3D — alternating direction
-        if (mockup) {
-            const dir = index % 2 === 0 ? 1 : -1;
-            tl.fromTo(mockup,
-                { autoAlpha: 0, x: 80 * dir, rotationY: -8 * dir },
-                { autoAlpha: 1, x: 0, rotationY: 0, duration: 1, ease: 'power3.out' },
-                0.25 + index * 0.02
-            );
-        }
-
-        // Code lines typewriter stagger
-        if (codeLines.length > 0) {
-            tl.fromTo(codeLines,
-                { autoAlpha: 0, x: 10 },
-                { autoAlpha: 1, x: 0, duration: 0.3, stagger: 0.04, ease: 'power2.out' },
-                0.6
-            );
-        }
+            }
+        );
     });
 };
 
 const initProjectProgress = () => {
-    console.log('initProjectProgress called');
-    const progressEl = document.getElementById('project-progress');
-    const progressNumEl = document.getElementById('project-progress-num');
-    const pinCards = gsap.utils.toArray(".project-card");
-    const contactSection = document.querySelector('#contact');
-
-    if (!progressEl || !progressNumEl || pinCards.length === 0) return;
-
-    // Show/hide progress indicator ONLY during project cards, hide before contact
-    ScrollTrigger.create({
-        trigger: pinCards[0],
-        start: "top 80%",
-        endTrigger: pinCards[pinCards.length - 1],
-        end: "bottom top",
-        onEnter: () => progressEl.classList.add('visible'),
-        onLeave: () => progressEl.classList.remove('visible'),
-        onEnterBack: () => progressEl.classList.add('visible'),
-        onLeaveBack: () => progressEl.classList.remove('visible'),
-    });
-
-    // Extra safety: explicitly hide when contact section appears
-    if (contactSection) {
-        ScrollTrigger.create({
-            trigger: contactSection,
-            start: "top 90%",
-            end: "bottom bottom",
-            onEnter: () => progressEl.classList.remove('visible'),
-            onLeaveBack: () => {
-                // Only re-show if we're still in project cards zone
-                const lastCard = pinCards[pinCards.length - 1];
-                const rect = lastCard.getBoundingClientRect();
-                if (rect.bottom > 0 && rect.top < window.innerHeight) {
-                    progressEl.classList.add('visible');
-                }
-            },
-        });
-    }
-
-    // Update counter for each card
-    pinCards.forEach((card, index) => {
-        ScrollTrigger.create({
-            trigger: card,
-            start: "top center",
-            onEnter: () => {
-                progressNumEl.textContent = String(index + 1).padStart(2, '0');
-            },
-            onEnterBack: () => {
-                progressNumEl.textContent = String(index + 1).padStart(2, '0');
-            },
-        });
-    });
+    // No-op: progress counter removed in cinematic redesign
+    console.log('initProjectProgress: cinematic layout — skipping');
 };
 
 window.initAnimations = {
@@ -646,9 +460,11 @@ window.initAnimations = {
     initHero,
     initScrollAnimations,
     initZoomAnimation,
+    initExperienceTimeline,
     initHorizontalSkills,
     initProjectStack,
     initProjectTitleCharacterAnimation,
     initProjectContentReveal,
     initProjectProgress
 };
+
